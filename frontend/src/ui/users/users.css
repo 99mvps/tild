@@ -1,0 +1,8 @@
+/* Container */
+.container-user {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  padding: 20px;
+}
