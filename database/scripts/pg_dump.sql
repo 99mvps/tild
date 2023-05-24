@@ -1,0 +1,10 @@
+CREATE USER tild;
+CREATE DATABASE tild;
+
+GRANT ALL PRIVILEGES ON DATABASE tild TO tild;
+
+
+CREATE USER tild_e2e_test;
+CREATE DATABASE tild_e2e_test;
+
+GRANT ALL PRIVILEGES ON DATABASE tild_e2e_test TO tild_e2e_test;
