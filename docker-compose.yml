@@ -1,0 +1,60 @@
+version: "3"
+
+# database layer
+services:
+  postgres-db:
+    container_name: tild-database
+    build:
+      context: ./database
+    env_file:
+      - ./database/.env
+    ports:
+      - "15432:5432"
+    volumes:
+      - ./database/pgsql-data:/var/lib/postgresql/data:rw
+    networks:
+      - application-network
+
+  # backend layer
+  backend:
+    container_name: tild-backend
+    build:
+      context: ./backend
+    env_file:
+      - ./backend/.env
+    expose:
+      - "3001"
+    ports:
+      - "3420:3001"
+      - "9229:9229"
+    volumes:
+      - ./backend/src:/home/backend/src
+    links:
+      - postgres-db
+    networks:
+      - application-network
+
+  # frontend layer
+  frontend:
+    container_name: tild-frontend
+    build:
+      context: ./frontend
+    env_file:
+      - ./frontend/.env
+    expose:
+      - "3000"
+    ports:
+      - "80:3000"
+    volumes:
+      - ./frontend/src:/home/frontend/src
+    depends_on:
+      - backend
+    networks:
+      - application-network
+
+networks:
+  application-network:
+
+
+volumes:
+  psql-data:
