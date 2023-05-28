@@ -10,14 +10,15 @@ import {
 
 import { Create, PermContactCalendar, HighlightOff } from "@mui/icons-material";
 import { UserDTO } from "./user.interfaces";
-import { ErrorMessage, TErrorMessage } from "components/error";
+import { ErrorMessage, TErrorMessage } from "ui/components/error";
 import {
   DeleteConfirmation,
   TDeleteConfirmation,
-} from "components/delete-confirmation";
+} from "ui/components/delete-confirmation";
 
-import { SuccessMessage, TSuccessMessageProps } from "components/success";
-import { useAuth, useCases } from "context";
+import { SuccessMessage, TSuccessMessageProps } from "ui/components/success";
+import { useAuth } from "context/use-auth";
+import { useCases } from "context/use-cases";
 
 import "./users.css";
 
@@ -130,7 +131,7 @@ export function ListUsers(): JSX.Element {
                   Editar
                 </Button>
               </Link>
-              {auth.user.sub !== user.id && (
+              {auth.user?.sub !== user.id && (
                 <Button
                   style={{ margin: 10 }}
                   onClick={() =>

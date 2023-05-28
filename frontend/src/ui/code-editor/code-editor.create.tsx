@@ -1,11 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { TextField, FormControl, Button, MenuItem, Grid } from "@mui/material";
+import {
+  TextField,
+  FormControl,
+  Button,
+  Grid,
+  FormHelperText,
+  Autocomplete,
+} from "@mui/material";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
-// import { CreateUserDTO, UserRoles } from "./index";
-import { TErrorMessage } from "components/error";
-import { SuccessMessage, TSuccessMessageProps } from "components/success";
-import { useCases } from "context";
+import { TErrorMessage } from "ui/components/error";
+import { SuccessMessage, TSuccessMessageProps } from "ui/components/success";
+import { useCases } from "context/use-cases";
+import { CodeEditorEnabledLanguages } from "./code-editor.enum";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { isLiveSelector } from "domain/state/general-application.recoil";
+import { CreateCodeEditorDTO } from "./code-editor.interfaces";
+import { codeEditorLangsDropDownList } from "./code-editor.mapper";
+import { CustomCard } from "ui/components/card/code-editor";
 
 /**
  * Users form creation
@@ -13,26 +25,37 @@ import { useCases } from "context";
  */
 export function CreateCode(): JSX.Element {
   const {
-    UserUseCases: { create },
+    CodeEditorUseCases: { create },
   } = useCases();
 
   const history = useHistory();
   const initialFormState = {
-    name: "",
-    email: "",
-    role: "",
-    password: "",
-    passwordConfirmation: "",
+    title: "",
+    lang: "",
   };
 
-  const [formInput, setFormInput] = useState<any>(initialFormState);
-  const [formInputErrors, setFormInputErrors] = useState<any>(initialFormState);
+  const codeEditorDropDownList = codeEditorLangsDropDownList(
+    Object.keys(CodeEditorEnabledLanguages)
+  );
+
+  const [formInput, setFormInput] =
+    useState<CreateCodeEditorDTO>(initialFormState);
+  const [formInputErrors, setFormInputErrors] =
+    useState<CreateCodeEditorDTO>(initialFormState);
   const [success, setSuccess] = useState<TSuccessMessageProps>();
+  const setTildLive = useSetRecoilState(isLiveSelector);
+  const isOnline = useRecoilState(isLiveSelector);
 
   const reset = () => {
     setSuccess(undefined);
     setFormInput(initialFormState);
     setFormInputErrors(initialFormState);
+  };
+
+  useEffect(() => {}, [formInput]);
+
+  const toggleOnlineStatus = () => {
+    setTildLive(!isOnline);
   };
 
   const handleChange = (event: any) => {
@@ -43,112 +66,108 @@ export function CreateCode(): JSX.Element {
   };
 
   const handleSubmit = () => {
+    console.log({ formInput });
     create(formInput, {
-      onSuccess: () =>
+      onSuccess: (codeEditor) => {
+        console.log("code-editor-create", { codeEditor });
         setSuccess({
-          message: "Usuário criado com sucesso!",
-          duration: 2500,
+          message: "🎉 Uhul! Vamos lá! 🎉",
+          duration: 1000,
           handlerOnClose: () => {
             reset();
-            history.push("/users");
+            toggleOnlineStatus();
+            history.push(`/live/${codeEditor.id}`);
           },
-        }),
+        });
+      },
       onError: ({ errors }: TErrorMessage) => {
         setFormInputErrors({
-          name: errors.name,
-          email: errors.email,
-          role: errors.role,
-          password: errors.password,
+          title: errors.title,
+          lang: errors.lang,
         });
       },
     });
   };
 
   return (
-    <Grid
-      container
-      style={{
-        margin: 100,
-        display: "flex",
-        flexDirection: "row",
-        flexWrap: "wrap",
-        padding: 20,
-      }}
-    >
-      <FormControl style={{ backgroundColor: "white" }}>
-        <h3 className="form-title">Usuário</h3>
-        {success && <SuccessMessage {...success} />}
-        <Grid item style={{ margin: 10 }}>
-          <TextField
-            id="name"
-            label="Nome do usuário"
-            value={formInput.name}
-            type="text"
-            name="name"
-            error={!!formInputErrors.name}
-            helperText={formInputErrors.name}
-            style={{ marginRight: 0 }}
-            onChange={handleChange}
-          />
-          <TextField
-            id="email"
-            label="Email do usuário"
-            value={formInput.email}
-            type="text"
-            name="email"
-            error={!!formInputErrors.email}
-            helperText={formInputErrors.email}
-            style={{ marginLeft: 20, marginRight: 0 }}
-            onChange={handleChange}
-          />
-        </Grid>
-        <Grid item style={{ margin: 10 }}>
-          <TextField
-            select
-            id="role"
-            name="role"
-            value={formInput.role}
-            label="Role"
-            error={!!formInputErrors.role}
-            helperText={formInputErrors.role}
-            onChange={handleChange}
-            style={{ width: 250 }}
-          >
-            <MenuItem value={""}>Selecione</MenuItem>
-            {/* <MenuItem value={UserRoles.ADMIN}>Admin</MenuItem>
-            <MenuItem value={UserRoles.STREAMER}>Streamer</MenuItem>
-            <MenuItem value={UserRoles.USER}>User</MenuItem> */}
-          </TextField>
-        </Grid>
-        <Grid item style={{ margin: 10 }}>
-          <TextField
-            id="password"
-            label="Senha do usuário"
-            value={formInput.password}
-            type="text"
-            name="password"
-            style={{ marginRight: 0, maxWidth: 250 }}
-            error={!!formInputErrors.password}
-            helperText={formInputErrors.password}
-            onChange={handleChange}
-          />
-          <TextField
-            id="passwordConfirmation"
-            label="Confirme a senha do usuário"
-            value={formInput.passwordConfirmation}
-            type="text"
-            name="passwordConfirmation"
-            style={{ marginLeft: 20, marginRight: 0 }}
-            onChange={handleChange}
-          />
-        </Grid>
-        <div className="button-right" style={{ margin: "20px 0 20px 0" }}>
-          <Button variant="contained" onClick={() => handleSubmit()}>
-            <SaveAsIcon style={{ marginRight: 15 }} />
-            Salvar Usuário
-          </Button>
-        </div>
-      </FormControl>
-    </Grid>
+    <>
+      <Grid
+        container
+        style={{
+          marginTop: 30,
+          marginLeft: 30,
+          display: "flex",
+          flexDirection: "row",
+          flexWrap: "wrap",
+          padding: 0,
+        }}
+      >
+        <FormControl style={{ backgroundColor: "white", width: "800px" }}>
+          <h3 className="form-title">~crie um tild~</h3>
+          {success && <SuccessMessage {...success} />}
+          <Grid item style={{ margin: 30 }}>
+            <TextField
+              id="title"
+              label="tild name"
+              value={formInput.title}
+              type="text"
+              name="title"
+              error={!!formInputErrors.title}
+              helperText={formInputErrors.title}
+              style={{ marginRight: 0, width: "100%" }}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item style={{ margin: 30 }}>
+            <Autocomplete
+              disablePortal
+              options={codeEditorDropDownList}
+              groupBy={(option) => option.label.slice(0, 1).toUpperCase()}
+              onChange={(event, newValue) =>
+                setFormInput((formInput: any) => ({
+                  ...formInput,
+                  lang: newValue?.label,
+                }))
+              }
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              renderInput={(params) => (
+                <>
+                  <TextField
+                    {...params}
+                    style={!!formInputErrors.lang ? { borderColor: "red" } : {}}
+                    label="Linguagem"
+                    name="lang"
+                    value={formInput.lang}
+                  />
+                  {!!formInputErrors.lang && (
+                    <FormHelperText error={!!formInputErrors.lang}>
+                      {formInputErrors.lang}
+                    </FormHelperText>
+                  )}
+                </>
+              )}
+            />
+          </Grid>
+          <div className="button-right" style={{ margin: "20px 10px 30px 0" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{
+                ":hover": {
+                  bgcolor: "secondary.main",
+                  color: "secondary.contrastText",
+                },
+              }}
+              onClick={() => handleSubmit()}
+            >
+              <SaveAsIcon style={{ marginRight: 15 }} />
+              Go live!
+            </Button>
+          </div>
+        </FormControl>
+      </Grid>
+
+      <CustomCard />
+    </>
   );
 }

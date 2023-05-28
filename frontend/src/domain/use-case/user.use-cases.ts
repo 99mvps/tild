@@ -3,15 +3,15 @@ import {
   FilterUserDTO,
   UpdateUserDTO,
   UserDTO,
-} from "../ui/users/user.interfaces";
+} from "../../ui/users/user.interfaces";
 
 import { ValidationError } from "yup";
 
 import { mapperYupErrorsToErrorMessages } from "domain/yup.mapper-errors";
 
-import { TErrorMessage } from "components/error";
+import { TErrorMessage } from "ui/components/error";
 import { BaseRepository } from "domain/repository";
-import { userValidation } from "../ui/users/user.validation";
+import { userValidation } from "../validations/user.validation";
 
 type UserUseCaseReturn = {
   onSuccess: (user?: UserDTO | UserDTO[] | undefined) => void;

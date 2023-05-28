@@ -1,7 +1,7 @@
 import { BaseRepository, IRepositories } from "domain/repository";
-import { TErrorMessage } from "components/error";
+import { TErrorMessage } from "ui/components/error";
 
-import { AuthCredentials, JWTAccessToken } from "../ui/auth/auth.interfaces";
+import { AuthCredentials, JWTAccessToken } from "../../ui/auth/auth.interfaces";
 
 type AuthUseCasesCaseReturn = {
   onSuccess: (accessToken: JWTAccessToken) => void;

@@ -1,3 +1,5 @@
+import { UserRoles } from "ui/users/user.interfaces";
+
 export type AuthCredentials = {
   username: string;
   password: string;
@@ -10,7 +12,10 @@ export type JWTUserToken = {
   sub: string;
   userEmail: string;
   userName: string;
-  userRole: string;
+  userRole: UserRoles;
+  userPermissions: {
+    allowedPaths: string[];
+  };
 };
 
 export type JWTAccessToken = {

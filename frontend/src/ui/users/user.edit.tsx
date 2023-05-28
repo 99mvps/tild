@@ -3,9 +3,9 @@ import { useHistory, useParams } from "react-router-dom";
 import { TextField, FormControl, Button, MenuItem, Grid } from "@mui/material";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import { UpdateUserDTO, UserDTO, UserRoles } from "./user.interfaces";
-import { ErrorMessage, TErrorMessage } from "components/error";
-import { SuccessMessage, TSuccessMessageProps } from "components/success";
-import { useCases } from "context";
+import { ErrorMessage, TErrorMessage } from "ui/components/error";
+import { SuccessMessage, TSuccessMessageProps } from "ui/components/success";
+import { useCases } from "context/use-cases";
 
 /**
  * The `"/path/:id"` param is a param that matches on the route and is treated as a value that needs to be fetched

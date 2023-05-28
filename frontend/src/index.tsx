@@ -10,34 +10,42 @@ import reportWebVitals from "./reportWebVitals";
 
 import { Toaster } from "react-hot-toast";
 
+import { RecoilRoot } from "recoil";
+
 const theme = createTheme({
   palette: {
     background: {
       default: "#252525",
     },
     primary: {
-      main: "#c56b65",
-      contrastText: "#fff",
+      main: "#252525",
+      contrastText: "#f6f3e4",
     },
     secondary: {
       main: "#f6f3e4",
-      contrastText: "#fff",
+      contrastText: "#c56b65",
     },
   },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: ({ ownerState }) => ({
-          ...(ownerState.variant === "outlined" && {
-            ":hover": {
-              backgroundColor: "#c56b65",
-              color: "#fff",
-            },
-          }),
-        }),
-      },
-    },
-  },
+  // components: {
+  //   MuiButton: {
+  //     styleOverrides: {
+  //       root: ({ ownerState }) => ({
+  //         ...(ownerState.variant === "outlined" && {
+  //           ":hover": {
+  //             backgroundColor: "#c56b65",
+  //             color: "#f6f3e4",
+  //           },
+  //         }),
+  //         ...(ownerState.variant === "contained" && {
+  //           ":hover": {
+  //             backgroundColor: "#252525",
+  //             color: "#f6f3e4",
+  //           },
+  //         }),
+  //       }),
+  //     },
+  //   },
+  // },
 });
 
 const root = ReactDOM.createRoot(
@@ -47,8 +55,10 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Root />
-      <Toaster />
+      <RecoilRoot key={Math.random()}>
+        <Root />
+        <Toaster />
+      </RecoilRoot>
     </ThemeProvider>
   </React.StrictMode>
 );

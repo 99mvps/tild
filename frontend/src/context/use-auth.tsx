@@ -13,12 +13,19 @@ import { UserRoles } from "ui/users/user.interfaces";
 import { JWTUserToken } from "ui/auth/auth.interfaces";
 import { ITokenStorage } from "infrastructure/adapter/storage/token";
 import { useCases } from "./use-cases";
-import { TErrorMessage } from "components/error";
+import { TErrorMessage } from "ui/components/error";
 import toast from "react-hot-toast";
+import { Permission } from "domain/permissions";
 
-type Auth = any | null;
+type Auth = {
+  user: JWTUserToken | undefined;
+  signin: (username: string, password: string) => Promise<string>;
+  signout: () => void;
+  getUserToken: () => JWTUserToken | undefined;
+  getUserPermissions: Permission;
+};
 
-const AuthContext = createContext<Auth>(null);
+const AuthContext = createContext<Auth | undefined>(undefined);
 
 export function AuthProvider({
   children,
@@ -38,71 +45,15 @@ function useProvideAuth(token: ITokenStorage) {
   const [user, setUser] = useState<JWTUserToken>();
   const { AuthUseCases } = useCases();
 
-  const postLoginRedirect = useMemo(
-    () => (role: string) =>
-      ({
-        [UserRoles.ADMIN]: "/users",
-        [UserRoles.STREAMER]: "/dashboard",
-        [UserRoles.USER]: "/",
-      }[role]),
-    []
-  );
+  const postLoginRedirect = useMemo(() => {
+    const redirectPaths = {
+      [UserRoles.ADMIN]: "/dashboard",
+      [UserRoles.STREAMER]: "/dashboard",
+      [UserRoles.USER]: "/",
+    };
 
-  const userPermission = (role: string) =>
-    ({
-      [UserRoles.ADMIN]: (permission: string) => ({
-        allowed: !!permission,
-        redirectTo: "/",
-      }),
-      [UserRoles.STREAMER]: (permission: string) => ({
-        allowed: ["/", "/dashboard", "/profile", "/streams"].includes(
-          permission
-        ),
-        redirectTo: "/dashboard",
-      }),
-      [UserRoles.USER]: (permission: string) => ({
-        allowed: ["/"].includes(permission),
-        redirectTo: "/",
-      }),
-    }[role]);
-
-  const signin = async (
-    username: string,
-    password: string
-  ): Promise<string> => {
-    AuthUseCases.login(
-      {
-        username,
-        password,
-      },
-      {
-        onSuccess: ({ accessToken }) => {
-          token.set(accessToken);
-
-          setUser(token.get());
-        },
-        onError: ({ title, errors }: TErrorMessage) => {
-          toast.error(`${title}: "${errors}"`);
-        },
-      }
-    );
-
-    return postLoginRedirect(user?.userRole || "") as string;
-  };
-
-  const signup = async (username: string, password: string) => {
-    throw new Error("not implemented yet");
-  };
-
-  const signout = () => {
-    setUser(undefined);
-
-    token.remove();
-  };
-
-  const getUserToken = () => {
-    return token.get();
-  };
+    return (role: UserRoles) => redirectPaths[role];
+  }, []);
 
   useEffect(() => {
     setUser(token.get());
@@ -110,14 +61,42 @@ function useProvideAuth(token: ITokenStorage) {
 
   return {
     user,
-    signin,
-    signup,
-    signout,
-    getUserToken,
-    userPermission,
+    signin: async (username: string, password: string): Promise<string> => {
+      AuthUseCases.login(
+        {
+          username,
+          password,
+        },
+        {
+          onSuccess: ({ accessToken }) => {
+            token.set(accessToken);
+
+            setUser(token.get());
+          },
+          onError: ({ title, errors }: TErrorMessage) => {
+            toast.error(`${title}: "${errors}"`);
+          },
+        }
+      );
+
+      return postLoginRedirect(user?.userRole ?? UserRoles.USER);
+    },
+    signout: () => {
+      setUser(undefined);
+
+      token.remove();
+    },
+    getUserToken: () => token.get(),
+    getUserPermissions: new Permission(user as JWTUserToken),
   };
 }
 
-export const useAuth = () => {
-  return useContext(AuthContext);
+export const useAuth = (): Auth => {
+  const auth = useContext(AuthContext);
+
+  if (!auth) {
+    throw new Error("useAuth must be used within AuthProvider");
+  }
+
+  return auth;
 };

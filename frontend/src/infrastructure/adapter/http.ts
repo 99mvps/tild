@@ -18,7 +18,7 @@ export interface IHttpRequestOption {
  * @interface IHttp
  */
 export interface IHttp {
-  request(requestOption: IHttpRequestOption): Promise<any>;
+  request(requestOption: IHttpRequestOption): Promise<Response>;
   setBearerTokenHeader(token: any): any;
 }
 

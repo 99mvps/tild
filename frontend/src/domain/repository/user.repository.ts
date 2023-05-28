@@ -6,6 +6,7 @@ import {
   UpdateUserDTO,
   FilterUserDTO,
 } from "../../ui/users/user.interfaces";
+import { AbstractRepository } from "./abstract.repository";
 
 export interface IUserRepository {
   create(user: CreateUserDTO): Promise<UserDTO>;
@@ -13,63 +14,21 @@ export interface IUserRepository {
   remove(id: string): Promise<UserDTO>;
   getAll(queryFilter?: FilterUserDTO): Promise<UserDTO[]>;
   getById(id: string): Promise<UserDTO>;
-  repoUrl: string;
   setSearchParams(searchParams: FilterUserDTO): void;
 }
 
-export class UserRepository implements IUserRepository {
-  /**
-   * the serverURL
-   *
-   * @type {string}
-   * @memberof UserRepository
-   */
-  private readonly _repoUrl: URL;
-
-  /**
-   * http client
-   *
-   * @type {IHttp}
-   * @memberof UserRepository
-   */
-  private readonly http: IHttp;
-
+export class UserRepository
+  extends AbstractRepository
+  implements IUserRepository
+{
   /**
    * Creates an instance of UserRepository.
    * @param {string} baseUrl server url
    * @param {IHttp} http http client
    * @memberof UserRepository
    */
-  constructor(baseUrl: string, http: IHttp, userToken: ITokenStorage) {
-    this._repoUrl = new URL("/users", baseUrl);
-    this.http = http;
-    this.http.setBearerTokenHeader(userToken.getRawToken());
-  }
-
-  /**
-   * The repository URLK
-   *
-   * @readonly
-   * @type {string}
-   * @memberof UserRepository
-   */
-  get repoUrl(): string {
-    return this._repoUrl.toString();
-  }
-
-  /**
-   * Set the url search params
-   *
-   * @private
-   * @param {FilterUserDTO} searchParams the search params
-   * @memberof UserRepository
-   */
-  setSearchParams(searchParams: FilterUserDTO) {
-    if (searchParams) {
-      Object.entries(searchParams).forEach(([key, value]) => {
-        this._repoUrl.searchParams.set(key, value as string);
-      });
-    }
+  constructor(http: IHttp, userToken: ITokenStorage) {
+    super("/users", http, userToken);
   }
 
   /**
@@ -82,14 +41,13 @@ export class UserRepository implements IUserRepository {
   async create(user: CreateUserDTO): Promise<UserDTO> {
     const response = await this.http.request({
       method: "POST",
-      url: this.repoUrl,
+      url: this.apiEndpoint,
       body: user,
     });
 
     const jsonResponse = await response.json();
 
     if (!response.ok) {
-      console.error(jsonResponse);
       throw new Error("Erro ao criar o usuário!", {
         cause: jsonResponse.message,
       });
@@ -106,14 +64,13 @@ export class UserRepository implements IUserRepository {
   async edit(user: UpdateUserDTO): Promise<UserDTO> {
     const response = await this.http.request({
       method: "PATCH",
-      url: this.repoUrl.concat(`/${user.id}`),
+      url: this.apiEndpoint.concat(`/${user.id}`),
       body: user,
     });
 
     const jsonResponse = await response.json();
 
     if (!response.ok) {
-      console.error(jsonResponse);
       throw new Error("Erro ao editar o usuário!", {
         cause: jsonResponse.message,
       });
@@ -130,13 +87,12 @@ export class UserRepository implements IUserRepository {
   async remove(id: string): Promise<UserDTO> {
     const response = await this.http.request({
       method: "DELETE",
-      url: this.repoUrl.concat(`/${id}`),
+      url: this.apiEndpoint.concat(`/${id}`),
     });
 
     const jsonResponse = await response.json();
 
     if (!response.ok) {
-      console.error(jsonResponse);
       throw new Error("Erro ao remove o usuário!", {
         cause: jsonResponse.message,
       });
@@ -151,16 +107,15 @@ export class UserRepository implements IUserRepository {
    * @returns
    */
   async getAll(queryFilter: FilterUserDTO): Promise<UserDTO[]> {
-    this.setSearchParams(queryFilter);
+    this.setSearchParams<FilterUserDTO>(queryFilter);
 
     const response = await this.http.request({
-      url: this.repoUrl,
+      url: this.apiEndpoint,
     });
 
     const jsonResponse = await response.json();
 
     if (!response.ok) {
-      console.error(jsonResponse);
       throw new Error("Erro ao buscar o usuário!", {
         cause: jsonResponse.message,
       });
@@ -176,13 +131,12 @@ export class UserRepository implements IUserRepository {
    */
   async getById(id: string): Promise<UserDTO> {
     const response = await this.http.request({
-      url: this.repoUrl.concat(`/${id}`),
+      url: this.apiEndpoint.concat(`/${id}`),
     });
 
     const jsonResponse = await response.json();
 
     if (!response.ok) {
-      console.error(jsonResponse);
       throw new Error("Erro ao buscar o usuário!", {
         cause: jsonResponse.message,
       });

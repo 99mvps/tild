@@ -1,85 +1,113 @@
 import React, { useEffect, useState } from "react";
-import { Switch, Route, Link, useLocation } from "react-router-dom";
-import { Button } from "@mui/material";
-
-import { useAuth } from "context";
+import { Switch, Link, useLocation, useHistory, Route } from "react-router-dom";
+import { Avatar, Box, Button } from "@mui/material";
+import { deepOrange } from "@mui/material/colors";
+import {
+  Code as CodeIcon,
+  Podcasts as PodcastsIcon,
+  Logout as LogoutIcon,
+} from "@mui/icons-material";
+import { useAuth } from "context/use-auth";
 import { LoginRoute } from "ui/auth/auth.login";
-
-import { AuthVerifier } from "components/auth/auth.verifier";
-import CodeIcon from "@mui/icons-material/Code";
-import PodcastsIcon from "@mui/icons-material/Podcasts";
-import SettingsIcon from "@mui/icons-material/Settings";
-import "./index.css";
-import "root.css";
+import { AuthVerifier } from "ui/components/auth/auth.verifier";
 import { CreateCode } from "./code-editor/code-editor.create";
 import { CreateUser } from "./users/user.create";
 import { UpdateUser } from "./users/user.edit";
 import { ListUsers } from "./users/user.list";
+import { isLiveSelector } from "domain/state/general-application.recoil";
+import { useRecoilValue } from "recoil";
+import { LiveShow } from "./live/live.show";
+
+import "./index.css";
+import "root.css";
+import logo from "./assets/logo.png";
+import { HomePage } from "./home/home.show";
+import { Dashboard } from "./dashboard/dashboard.show";
 
 export function ApplicationRoutes() {
   let auth = useAuth();
 
   const location = useLocation<any>();
 
+  const history = useHistory();
+
   const [activePath, setActivePath] = useState<string>("/");
+
+  const setLinkActive = (path: string) =>
+    activePath.startsWith(path) ? "active" : "";
+
+  const isOnline = useRecoilValue(isLiveSelector);
 
   useEffect(() => {
     setActivePath(location.pathname);
-  }, [location.pathname]);
+  }, [auth.user, history, location.pathname]);
+
+  if (!auth.user && location.pathname === "/") {
+    return <HomePage />;
+  }
 
   return auth.user ? (
     <>
       <AuthVerifier />
       <div id="sidebar">
         <nav>
-          Bem vindo, {auth.user.userName}
+          <img
+            src={logo}
+            className="App-logo"
+            alt="Logo"
+            style={{ margin: "0 auto", marginBottom: 50, width: 128 }}
+          />
           <ul>
-            <li>
-              <Link
-                className={activePath === "/live" ? "active" : ""}
-                to="/live"
-              >
-                Live <PodcastsIcon color="error" />
+            <li color={"success"}>
+              <Link className={setLinkActive("/live")} to="/live">
+                Live <PodcastsIcon color={"success"} />
               </Link>
             </li>
+            {/* {isOnline ?? ()} */}
             <li>
-              <Link
-                className={activePath === "/code" ? "active" : ""}
-                to="/code"
-              >
+              <Link className={setLinkActive("/code")} to="/code/new">
                 Code <CodeIcon />
-              </Link>
-            </li>
-            <li>
-              <Link
-                className={activePath === "/settings" ? "active" : ""}
-                to="/settings"
-              >
-                Configurações <SettingsIcon />
               </Link>
             </li>
           </ul>
         </nav>
-        <div id="logout">
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Link className={setLinkActive("/settings")} to="/settings">
+            <Avatar sx={{ bgcolor: deepOrange[500] }}>
+              {auth.user?.userName.slice(0, 1)}
+            </Avatar>
+          </Link>
           <Button
-            variant="outlined"
-            color="primary"
+            variant="contained"
+            color="secondary"
+            endIcon={<LogoutIcon />}
             onClick={() => auth.signout()}
           >
             Logout
           </Button>
-        </div>
+        </Box>
       </div>
       <div id="detail" style={{ overflow: "scroll" }}>
         <Switch>
+          <Route exact path="/dashboard">
+            <Dashboard />
+          </Route>
           <Route exact path="/login">
             <LoginRoute />
           </Route>
-          <Route exact path={"/code"} children={<ListUsers />} />
-          <Route path={"/code/new"}>
+          <Route exact path={"/code/new"}>
             <CreateCode />
           </Route>
-
+          <Route path={"/live/:id?"}>
+            <LiveShow />
+          </Route>
           <Route exact path={"/users"} children={<ListUsers />} />
           <Route path={"/users/new"}>
             <CreateUser />
@@ -87,6 +115,7 @@ export function ApplicationRoutes() {
           <Route path={"/users/:id"}>
             <UpdateUser />
           </Route>
+          {/* <Route component={HomePage} /> */}
         </Switch>
       </div>
     </>

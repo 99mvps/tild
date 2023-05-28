@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import logo from "assets/logo.png";
+import logo from "../assets/logo.png";
 
 import { useHistory, useLocation } from "react-router-dom";
-import { useAuth } from "context";
+import { useAuth } from "context/use-auth";
 import { TextField, Button } from "@mui/material";
+import IntegrationInstructionsIcon from "@mui/icons-material/IntegrationInstructions";
 
-import { ErrorMessage, TErrorMessage } from "components/error";
+import { ErrorMessage, TErrorMessage } from "ui/components/error";
 
 import "./auth.css";
 export function LoginRoute(): JSX.Element {
@@ -70,8 +71,8 @@ export function LoginRoute(): JSX.Element {
             <Button
               type="submit"
               variant="contained"
-              color="primary"
               style={{ float: "right" }}
+              startIcon={<IntegrationInstructionsIcon />}
             >
               Entrar
             </Button>

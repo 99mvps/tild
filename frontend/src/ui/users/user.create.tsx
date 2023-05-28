@@ -3,9 +3,9 @@ import { useHistory } from "react-router-dom";
 import { TextField, FormControl, Button, MenuItem, Grid } from "@mui/material";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import { CreateUserDTO, UserRoles } from "./user.interfaces";
-import { TErrorMessage } from "components/error";
-import { SuccessMessage, TSuccessMessageProps } from "components/success";
-import { useCases } from "context";
+import { TErrorMessage } from "ui/components/error";
+import { SuccessMessage, TSuccessMessageProps } from "ui/components/success";
+import { useCases } from "context/use-cases";
 
 /**
  * Users form creation
