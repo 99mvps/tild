@@ -1,6 +1,7 @@
 import { DataSource, DataSourceOptions } from "typeorm";
 import { User } from "../users/user.entity";
 import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
+import { CodeEditor } from "src/code-editor/code-editor.entity";
 
 export const testDatabaseConfigs = {
   type: process.env.DATABASE_TYPE as PostgresConnectionOptions["type"],
@@ -18,7 +19,7 @@ export const testDatabaseConfigs = {
   },
   synchronize: false,
   name: "default",
-  entities: [User],
+  entities: [User, CodeEditor],
   logging: false,
 } as DataSourceOptions;
 

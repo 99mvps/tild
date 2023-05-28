@@ -4,9 +4,10 @@ import { JwtService } from "@nestjs/jwt";
 import { User } from "src/users/user.entity";
 import * as bcrypt from "bcrypt";
 import { UsersDTO } from "src/users/dto/user.dto";
+import { UserRoles } from "src/users/user.enum";
 
 export const jwtConstants = {
-  secret: "05e9eadd-d1c7-490c-a74f-0f8ec2b67beb",
+  secret: process.env.JWT_SECRET,
 };
 
 @Injectable()
@@ -17,7 +18,7 @@ export class AuthService {
     const user = await this.userService.findUserByEmail(userEmail);
 
     if (!user) {
-      throw new NotFoundException("não achamo pivete");
+      throw new NotFoundException("Usuário não encontrado.");
     }
 
     const isPasswordValid = await bcrypt.compare(pass, user.password);
@@ -31,11 +32,22 @@ export class AuthService {
   }
 
   async login(user: UsersDTO) {
+    let allowedPaths = [] as string[];
+
+    if (user.role === UserRoles.STREAMER) {
+      allowedPaths = ["/dashboard", "/settings", "/code", "/live"];
+    }
+
+    if (user.role === UserRoles.USER) {
+      allowedPaths = ["/settings", "/code", "/live"];
+    }
+
     const payload = {
       sub: user.id,
       userEmail: user.email,
       userName: user.name,
       userRole: user.role,
+      userPermissions: { allowedPaths },
     };
     return {
       accessToken: this.jwtService.sign(payload),

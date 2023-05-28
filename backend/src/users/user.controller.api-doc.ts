@@ -149,7 +149,8 @@ export function UpdateUserApiDoc() {
       summary: "Edita um usuário.",
     }),
     ApiParam({
-      name: "Id do usuário",
+      name: "id",
+      description: "Id do usuário",
       example: "c2fd0654-6f00-4d3d-a935-693979232eeb",
     }),
     ApiBody({
@@ -178,7 +179,8 @@ export function DeleteUserApiDoc() {
       summary: "Remove um usuário.",
     }),
     ApiParam({
-      name: "Id do usuário",
+      name: "id",
+      description: "Id do usuário",
       example: "c2fd0654-6f00-4d3d-a935-693979232eeb",
     }),
     ApiResponse({
@@ -203,8 +205,8 @@ export function GetAllUsersApiDoc() {
       summary: "Recupera todos os usuário.",
     }),
     ApiQuery({
-      name: "name",
-      description: "The user name.",
+      name: "queryFilter",
+      description: "The user filter.",
       type: FilterUsersDTO,
     }),
     ApiResponse({
