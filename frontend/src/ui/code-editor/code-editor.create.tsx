@@ -166,8 +166,6 @@ export function CreateCode(): JSX.Element {
           </div>
         </FormControl>
       </Grid>
-
-      <CustomCard />
     </>
   );
 }

@@ -49,53 +49,58 @@ export function ApplicationRoutes() {
   return auth.user ? (
     <>
       <AuthVerifier />
-      <div id="sidebar">
-        <nav>
-          <img
-            src={logo}
-            className="App-logo"
-            alt="Logo"
-            style={{ margin: "0 auto", marginBottom: 50, width: 128 }}
-          />
-          <ul>
-            <li color={"success"}>
-              <Link className={setLinkActive("/live")} to="/live">
-                Live <PodcastsIcon color={"success"} />
-              </Link>
-            </li>
-            {/* {isOnline ?? ()} */}
-            <li>
-              <Link className={setLinkActive("/code")} to="/code/new">
-                Code <CodeIcon />
-              </Link>
-            </li>
-          </ul>
-        </nav>
+      {location.pathname !== "/" && (
+        <div id="sidebar">
+          <nav>
+            <img
+              src={logo}
+              className="App-logo"
+              alt="Logo"
+              style={{ margin: "0 auto", marginBottom: 50, width: 128 }}
+            />
+            <ul>
+              <li color={"success"}>
+                <Link className={setLinkActive("/live")} to="/live">
+                  Live <PodcastsIcon color={"success"} />
+                </Link>
+              </li>
+              {/* {isOnline ?? ()} */}
+              <li>
+                <Link className={setLinkActive("/code")} to="/code/new">
+                  Code <CodeIcon />
+                </Link>
+              </li>
+            </ul>
+          </nav>
 
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Link className={setLinkActive("/settings")} to="/settings">
-            <Avatar sx={{ bgcolor: deepOrange[500] }}>
-              {auth.user?.userName.slice(0, 1)}
-            </Avatar>
-          </Link>
-          <Button
-            variant="contained"
-            color="secondary"
-            endIcon={<LogoutIcon />}
-            onClick={() => auth.signout()}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
           >
-            Logout
-          </Button>
-        </Box>
-      </div>
+            <Link className={setLinkActive("/settings")} to="/settings">
+              <Avatar sx={{ bgcolor: deepOrange[500] }}>
+                {auth.user?.userName.slice(0, 1)}
+              </Avatar>
+            </Link>
+            <Button
+              variant="contained"
+              color="secondary"
+              endIcon={<LogoutIcon />}
+              onClick={() => auth.signout()}
+            >
+              Logout
+            </Button>
+          </Box>
+        </div>
+      )}
       <div id="detail" style={{ overflow: "scroll" }}>
         <Switch>
+          <Route exact path="/">
+            <HomePage />
+          </Route>
           <Route exact path="/dashboard">
             <Dashboard />
           </Route>

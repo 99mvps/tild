@@ -6,7 +6,7 @@ import { CodeComponent } from "ui/components/svg-component/code-component";
 
 export function CustomCard() {
   return (
-    <Card sx={{ maxWidth: 230, margin: 5 }}>
+    <Card sx={{ maxWidth: 230 }}>
       {/* Top Part */}
       <CardContent sx={{ display: "flex", justifyContent: "center" }}>
         <CodeComponent extension="js" />
