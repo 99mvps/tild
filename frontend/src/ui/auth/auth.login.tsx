@@ -3,12 +3,12 @@ import logo from "../assets/logo.png";
 
 import { useHistory, useLocation } from "react-router-dom";
 import { useAuth } from "context/use-auth";
-import { TextField, Button } from "@mui/material";
-import IntegrationInstructionsIcon from "@mui/icons-material/IntegrationInstructions";
+import { TextField, Button, Typography } from "@mui/material";
 
 import { ErrorMessage, TErrorMessage } from "ui/components/error";
 
 import "./auth.css";
+import { AccountCircle, AddBox } from "@mui/icons-material";
 export function LoginRoute(): JSX.Element {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -67,15 +67,43 @@ export function LoginRoute(): JSX.Element {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <div className="form-group">
-            <Button
-              type="submit"
-              variant="contained"
-              style={{ float: "right" }}
-              startIcon={<IntegrationInstructionsIcon />}
+          <div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginBottom: "1rem",
+                marginRight: -15,
+              }}
             >
-              Entrar
-            </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                type="submit"
+                startIcon={<AccountCircle />}
+                // style={{ backgroundColor: "#9146FF", color: "#fff" }}
+              >
+                Login
+              </Button>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="body2" style={{ marginRight: "0.5rem" }}>
+                Ainda não tem uma conta?
+              </Typography>
+              <Button
+                variant="text"
+                startIcon={<AddBox />}
+                style={{ textTransform: "none", color: "#9146FF" }}
+              >
+                Só vamo!
+              </Button>
+            </div>
           </div>
         </div>
       </form>

@@ -7,8 +7,7 @@ export function HomeList() {
     <Grid
       container
       style={{
-        padding: 2,
-        margin: 3,
+        padding: 20,
       }}
       spacing={1}
     >

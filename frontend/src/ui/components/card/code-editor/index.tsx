@@ -6,42 +6,26 @@ import { CodeComponent } from "ui/components/svg-component/code-component";
 
 export function CustomCard() {
   return (
-    <Card sx={{ maxWidth: 230 }}>
+    <Card>
       {/* Top Part */}
       <CardContent sx={{ display: "flex", justifyContent: "center" }}>
         <CodeComponent extension="js" />
       </CardContent>
 
       {/* Bottom Part */}
-      <CardContent>
-        <Grid container spacing={1} alignItems="center">
+      <CardContent sx={{ maxWidth: 230 }}>
+        <Grid container alignItems="center">
           <Grid item>
             <Typography variant="h6" fontWeight="fontWeightBold" gutterBottom>
-              Title
+              Tild
             </Typography>
-            <Typography
-              variant="body2"
-              sx={{ marginTop: "-10px", marginBottom: "20px" }}
-            >
+            <Typography sx={{ marginTop: "-10px", marginBottom: "20px" }}>
               @Username
             </Typography>
           </Grid>
         </Grid>
 
-        <Grid container spacing={1} alignItems="center">
-          <Grid
-            item
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <AccessTime />
-            <Typography variant="body2" sx={{ marginLeft: "5px" }}>
-              27/05/23 18:03
-            </Typography>
-          </Grid>
+        <Grid container alignItems="center">
           <Grid
             item
             sx={{
@@ -51,13 +35,22 @@ export function CustomCard() {
             }}
           >
             <Visibility />
-            <Typography variant="body2" sx={{ marginLeft: "5px" }}>
-              1.5k Views
-            </Typography>
+            <Typography sx={{ marginLeft: "5px" }}>1.5k Views</Typography>
+          </Grid>
+          <Grid
+            item
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <AccessTime />
+            <Typography sx={{ marginLeft: "5px" }}>27/05/23 18:03</Typography>
           </Grid>
         </Grid>
 
-        <Grid container spacing={1} alignItems="end">
+        <Grid container alignItems="end">
           <Grid
             item
             sx={{

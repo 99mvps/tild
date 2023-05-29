@@ -1,11 +1,12 @@
 import React from "react";
 
-import { AppBar, Toolbar, IconButton, Box, TextField } from "@mui/material";
-import { Menu as MenuIcon, Search as SearchIcon } from "@mui/icons-material";
+import { AppBar, Toolbar, IconButton, Box } from "@mui/material";
+import { AccountCircle as AccountCircleIcon } from "@mui/icons-material";
 
 import logo from "../assets/logo.png";
 import { HomeList } from "./home.list";
-import { HomeSearch } from "./component/search.component";
+import { HomeSearch } from "./component/search";
+import { Link } from "react-router-dom";
 
 export function HomePage() {
   return (
@@ -29,7 +30,12 @@ export function HomePage() {
           <HomeSearch />
 
           <IconButton edge="end" color="inherit" aria-label="menu">
-            <MenuIcon />
+            <Link
+              to="/login"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <AccountCircleIcon color="inherit" />
+            </Link>
           </IconButton>
         </Toolbar>
       </AppBar>
