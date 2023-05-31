@@ -14,7 +14,7 @@ export class Users1684548032541 implements MigrationInterface {
       "role" "public"."users_role_enum" not null,
       "password" character varying not null,
       "created_at" TIMESTAMP not null default now(),
-      "updated_at" TIMESTAMP default null,
+      "updated_at" TIMESTAMP not null default now(),
       "deleted_at" TIMESTAMP default null,
       constraint "UQ_97672ac88f789774dd47f7c8be3" unique ("email"),
       constraint "PK_a3ffb1c0c8416b9fc6f907b7433" primary key ("id"))`

@@ -131,19 +131,17 @@ export enum CodeEditorEnabledLanguages {
 // Usage:
 // const extensions = Object.values(LanguageExtensions); // [".apl", ".asciiarmor", ".asterisk", ...]
 
-export const CodeEditorEnabledLanguagesFind = (
-  lang: string
-): string | undefined => {
-  const foundLang = Object.keys(CodeEditorEnabledLanguages).find((key) => {
-    if (lang === key) {
-      return CodeEditorEnabledLanguages[
-        key as keyof typeof CodeEditorEnabledLanguages
-      ];
-    }
-    return undefined;
-  });
-
-  return foundLang;
+export const CodeEditorEnabledLanguagesFind = (lang: string): string | null => {
+  return (
+    Object.keys(CodeEditorEnabledLanguages).find((key) => {
+      if (lang === key) {
+        return CodeEditorEnabledLanguages[
+          key as keyof typeof CodeEditorEnabledLanguages
+        ];
+      }
+      return null;
+    }) ?? null
+  );
 };
 
 /**

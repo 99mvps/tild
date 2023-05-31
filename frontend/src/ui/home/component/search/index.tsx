@@ -5,7 +5,7 @@ import { CodeEditorEnabledLanguagesFind } from "ui/code-editor/code-editor.enum"
 import { IconSearchButton } from "./icon";
 import { Cancel } from "@mui/icons-material";
 
-interface IChip {
+interface IChipParams {
   label: string;
   key: string;
   onDelete?: () => void;
@@ -18,10 +18,12 @@ interface IChip {
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export function HomeSearch() {
-  const inputRef = useRef<HTMLInputElement | null>(null);
+export function HomeSearch({ onSubmit }: any) {
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [isSearchLoading, setIsSearchLoading] = useState<boolean>(false);
-  const [inputQueryParams, setInputQueryParams] = useState<IChip[] | []>([]);
+  const [inputQueryParams, setInputQueryParams] = useState<IChipParams[] | []>(
+    []
+  );
   const [searchHandlerMatch, setSearchHandlerMatch] = useState<string>("");
 
   const handleTextChange = async (
@@ -38,11 +40,8 @@ export function HomeSearch() {
 
   const fetchUserHandler = async (handler: string) => {
     setIsSearchLoading(true);
-
-    // async api call
     await sleep(1000);
-    // sleep function
-    setIsSearchLoading(false);
+    // async api call
     // validated handler apiCall(handler) etc...
     const apiReturn = {
       code: "a",
@@ -52,14 +51,14 @@ export function HomeSearch() {
       },
     };
 
-    let result = handler === apiReturn.data.userHandler ? handler : undefined;
+    let result = handler === apiReturn.data.userHandler ? handler : null;
+
+    setIsSearchLoading(false);
 
     if (!result) {
       result = CodeEditorEnabledLanguagesFind(handler.replace("@", ""));
-      result = result ? "@" + result : undefined;
+      result = result ? "@" + result : null;
     }
-
-    console.log(result);
 
     return result;
   };
@@ -76,12 +75,12 @@ export function HomeSearch() {
     if (event.key === "Enter" && !searchHandlerMatch) {
       // EXECUTES THE SEARCH
       console.log("searching...");
+      onSubmit && onSubmit(inputQueryParams);
       return;
     }
 
     if (event.key === " " || event.key === "Enter") {
       let handlerAlreadyAdded = false;
-
       const userHandler = await fetchUserHandler(searchHandlerMatch);
 
       if (!userHandler) {
@@ -90,7 +89,6 @@ export function HomeSearch() {
 
       inputQueryParams.forEach((param) => {
         if (param.label === userHandler) {
-          console.log("oi");
           handlerAlreadyAdded = true;
         }
       });
@@ -101,12 +99,12 @@ export function HomeSearch() {
 
       setSearchHandlerMatch("");
 
-      if (userHandler && inputRef.current) {
-        const newValue = inputRef.current.value.replace(
+      if (userHandler && searchInputRef.current) {
+        const newValue = searchInputRef.current.value.replace(
           new RegExp(userHandler, "g"),
           ""
         );
-        inputRef.current.value = newValue || "";
+        searchInputRef.current.value = newValue || "";
       }
 
       setInputQueryParams((queryParams) => [
@@ -132,7 +130,7 @@ export function HomeSearch() {
         fullWidth
         onChange={handleTextChange}
         onKeyDown={handleKeyDown}
-        inputRef={inputRef}
+        inputRef={searchInputRef}
         sx={{
           "& .MuiOutlinedInput-root": {
             backgroundColor: "#C2BFFF",
@@ -149,9 +147,7 @@ export function HomeSearch() {
           endAdornment: (
             <>
               {inputQueryParams &&
-                inputQueryParams.map((chipParams: IChip) => (
-                  <Chip {...chipParams} />
-                ))}
+                inputQueryParams.map((chip: IChipParams) => <Chip {...chip} />)}
               <IconSearchButton loading={isSearchLoading} />
             </>
           ),

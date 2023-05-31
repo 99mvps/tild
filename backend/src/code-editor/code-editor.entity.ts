@@ -26,15 +26,16 @@ export class CodeEditor {
   @Column({
     type: "enum",
     enum: Langs,
+    default: null,
   })
-  lang: Langs;
+  lang?: Langs;
 
   @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
 
   @UpdateDateColumn({ name: "updated_at" })
-  updatedAt: Date;
+  updatedAt?: Date;
 
   @DeleteDateColumn({ name: "deleted_at" })
-  deletedAt: Date;
+  deletedAt?: Date;
 }

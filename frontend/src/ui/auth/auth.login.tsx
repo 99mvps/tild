@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import logo from "../assets/logo.png";
 
-import { useHistory, useLocation } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { useAuth } from "context/use-auth";
 import { TextField, Button, Typography } from "@mui/material";
 
@@ -96,13 +96,20 @@ export function LoginRoute(): JSX.Element {
               <Typography variant="body2" style={{ marginRight: "0.5rem" }}>
                 Ainda não tem uma conta?
               </Typography>
-              <Button
-                variant="text"
-                startIcon={<AddBox />}
-                style={{ textTransform: "none", color: "#9146FF" }}
-              >
-                Só vamo!
-              </Button>
+              {/* <IconButton edge="end" color="inherit">
+                  Registar
+                  <AddBox />
+              </IconButton> */}
+
+              <Link to="/register">
+                <Button
+                  variant="text"
+                  startIcon={<AddBox />}
+                  style={{ textTransform: "none", color: "#9146FF" }}
+                >
+                  Só vamo!
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

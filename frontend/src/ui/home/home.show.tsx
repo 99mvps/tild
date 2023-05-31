@@ -9,6 +9,9 @@ import { HomeSearch } from "./component/search";
 import { Link } from "react-router-dom";
 
 export function HomePage() {
+  const handler = (data: any) => {
+    console.log({ data });
+  };
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
@@ -27,7 +30,7 @@ export function HomePage() {
             src={logo}
           />
 
-          <HomeSearch />
+          <HomeSearch onSubmit={handler} />
 
           <IconButton edge="end" color="inherit" aria-label="menu">
             <Link
@@ -39,6 +42,7 @@ export function HomePage() {
           </IconButton>
         </Toolbar>
       </AppBar>
+
       <HomeList />
     </Box>
   );

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Switch, Link, useLocation, useHistory, Route } from "react-router-dom";
+import { Switch, Link, Route, useHistory, useLocation } from "react-router-dom";
+import { Location } from "history";
 import { Avatar, Box, Button } from "@mui/material";
 import { deepOrange } from "@mui/material/colors";
 import {
@@ -23,11 +24,24 @@ import "root.css";
 import logo from "./assets/logo.png";
 import { HomePage } from "./home/home.show";
 import { Dashboard } from "./dashboard/dashboard.show";
+import { UserProfileRegistration } from "./user-profile/user-profile.create";
+
+function NotLogged({ pathname, search, hash }: any) {
+  if (pathname === "/") {
+    return <HomePage />;
+  }
+
+  if (pathname === "/register") {
+    return <UserProfileRegistration />;
+  }
+
+  return <LoginRoute />;
+}
 
 export function ApplicationRoutes() {
   let auth = useAuth();
 
-  const location = useLocation<any>();
+  const location: Location = useLocation();
 
   const history = useHistory();
 
@@ -41,10 +55,6 @@ export function ApplicationRoutes() {
   useEffect(() => {
     setActivePath(location.pathname);
   }, [auth.user, history, location.pathname]);
-
-  if (!auth.user && location.pathname === "/") {
-    return <HomePage />;
-  }
 
   return auth.user ? (
     <>
@@ -101,6 +111,9 @@ export function ApplicationRoutes() {
           <Route exact path="/">
             <HomePage />
           </Route>
+          <Route exact path="/register">
+            <UserProfileRegistration />
+          </Route>
           <Route exact path="/dashboard">
             <Dashboard />
           </Route>
@@ -125,6 +138,6 @@ export function ApplicationRoutes() {
       </div>
     </>
   ) : (
-    <LoginRoute />
+    <NotLogged {...location} />
   );
 }

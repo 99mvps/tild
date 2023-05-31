@@ -17,7 +17,6 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { isLiveSelector } from "domain/state/general-application.recoil";
 import { CreateCodeEditorDTO } from "./code-editor.interfaces";
 import { codeEditorLangsDropDownList } from "./code-editor.mapper";
-import { CustomCard } from "ui/components/card/code-editor";
 
 /**
  * Users form creation

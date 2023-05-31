@@ -20,7 +20,7 @@ export class CodeEditorDTO {
     description: "A linguagem do tild.",
     example: "javascript",
   })
-  lang: Langs;
+  lang?: Langs;
 
   @ApiProperty({
     description: "Indica se a live foi iniciada.",
@@ -32,10 +32,10 @@ export class CodeEditorDTO {
   createdAt: Date;
 
   @ApiProperty({ name: "updatedAt", description: "A data de atualização do tild." })
-  updatedAt: Date;
+  updatedAt?: Date;
 
   @ApiProperty({ name: "deletedAt", description: "A data de deleção do tild." })
-  deletedAt: Date;
+  deletedAt?: Date;
 }
 
 export class FilterCodeEditorDTO extends PartialType(CodeEditorDTO) {}
