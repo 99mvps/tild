@@ -64,6 +64,11 @@ export function CreateUserApiDoc() {
                 type: "string",
                 example: "Jhon Doe",
               },
+              profileImage: {
+                type: "string",
+                example:
+                  '"{"skinTone":"black","eyes":"normal","eyebrows":"serious","mouth":"grin","hair":"short","facialHair":"none2","clothing":"shirt","accessory":"none","graphic":"vue","hat":"none4","body":"chest","hairColor":"black","clothingColor":"white","circleColor":"blue","lipColor":"green","hatColor":"white","faceMaskColor":"black","mask":true,"faceMask":false,"lashes":true}"',
+              },
               role: {
                 type: "string",
                 example: "admin",

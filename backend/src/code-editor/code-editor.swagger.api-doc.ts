@@ -7,16 +7,10 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiParam,
-  ApiQuery,
   ApiResponse,
   ApiUnprocessableEntityResponse,
 } from "@nestjs/swagger";
-import {
-  CodeEditorDTO,
-  CreateCodeEditorDTO,
-  FilterCodeEditorDTO,
-  UpdateCodeEditorDTO,
-} from "./dto/code-editor.dto";
+import { CodeEditorDTO, CreateCodeEditorDTO, UpdateCodeEditorDTO } from "./dto/code-editor.dto";
 import { Langs } from "./code-editor.enum";
 import { DeleteResult } from "typeorm";
 

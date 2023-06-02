@@ -28,7 +28,7 @@ import {
   DeleteCodeEditorApiDoc,
   UpdateCodeEditorApiDoc,
   GetCodeEditorApiDoc,
-} from "./code-editor.controller.api-doc";
+} from "./code-editor.swagger.api-doc";
 
 @ApiTags("code-editor")
 @Controller("code-editor")
