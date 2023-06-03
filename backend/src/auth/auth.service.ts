@@ -5,6 +5,7 @@ import { User } from "src/users/user.entity";
 import * as bcrypt from "bcrypt";
 import { UsersDTO } from "src/users/dto/user.dto";
 import { UserRoles } from "src/users/user.enum";
+import { AuthDTO } from "./dto/auth.dto";
 
 export const jwtConstants = {
   secret: process.env.JWT_SECRET,
@@ -18,7 +19,9 @@ export class AuthService {
     const user = await this.userService.findUserByEmail(userEmail);
 
     if (!user) {
-      throw new NotFoundException("Usuário não encontrado.");
+      throw new NotFoundException("Usuário não encontrado.", {
+        cause: "Senha errada, ou usuário desconhecido." as unknown as Error,
+      });
     }
 
     const isPasswordValid = await bcrypt.compare(pass, user.password);
@@ -32,7 +35,7 @@ export class AuthService {
   }
 
   async login(user: UsersDTO) {
-    let allowedPaths = [] as string[];
+    let allowedPaths: string[] = [];
 
     if (user.role === UserRoles.STREAMER) {
       allowedPaths = ["/dashboard", "/settings", "/code", "/live"];
@@ -47,10 +50,16 @@ export class AuthService {
       userEmail: user.email,
       userName: user.name,
       userRole: user.role,
+      userProfileImage: user.profileImage,
       userPermissions: { allowedPaths },
     };
+
     return {
-      accessToken: this.jwtService.sign(payload),
+      code: AuthDTO.success,
+      message: AuthDTO.successMessage,
+      data: {
+        accessToken: this.jwtService.sign(payload),
+      },
     };
   }
 }

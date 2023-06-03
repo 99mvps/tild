@@ -66,26 +66,13 @@ i {
 
 #sidebar nav a:hover {
   background: #e3e3e3;
-  /* padding: 10px 15px; */
   margin: 0px 0px;
 }
-
-/* 
-#sidebar nav ul li a.active {
-} */
 
 #sidebar nav a.active {
   background: #e3e3e3;
 }
 
-#sidebar nav a.pending {
-  color: hsl(224, 98%, 58%);
-}
-
-#detail {
-  flex: 1;
-  width: 100%;
-}
 
 ul.nav {
   list-style-type: none;
@@ -94,6 +81,7 @@ ul.nav {
   overflow: hidden;
   background-color: #333;
 }
+
 ul.nav li.nav-item {
   float: left;
 }

@@ -16,18 +16,21 @@ export interface UserDTO {
   id: string;
   name: string;
   email: string;
-  role: UserRoles | string;
+  role?: UserRoles | string;
   password: string;
   passwordConfirmation?: string;
+  profileImage?: string;
+  codeConductAccept: boolean;
   createdAt: Date;
   updatedAt: Date;
+  deletedAt: Date;
 }
 
 export interface CreateUserDTO
-  extends Partial<Omit<UserDTO, "id" | "createdAt" | "updatedAt">> {}
+  extends Omit<UserDTO, "id" | "createdAt" | "updatedAt" | "deletedAt"> {}
 
 export interface UpdateUserDTO
-  extends Partial<Omit<UserDTO, "createdAt" | "updatedAt">> {}
+  extends Partial<Omit<UserDTO, "createdAt" | "updatedAt" | "deletedAt">> {}
 
 export interface FilterUserDTO extends Partial<UserDTO> {}
 

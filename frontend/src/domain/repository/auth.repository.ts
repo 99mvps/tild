@@ -34,16 +34,11 @@ export class AuthRepository
       body: { username, password },
     });
 
-    const responseJson = await response.json();
+    const { data } = await this.requestHandler(
+      response,
+      "Erro ao realizar o login"
+    );
 
-    console.log(responseJson);
-
-    if (!response.ok) {
-      throw new Error("Erro ao realizar o login", {
-        cause: responseJson.message,
-      });
-    }
-
-    return responseJson;
+    return data;
   }
 }

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Switch, Link, Route, useHistory, useLocation } from "react-router-dom";
+import { Switch, Link, useHistory, useLocation, Route } from "react-router-dom";
 import { Location } from "history";
 import { Avatar, Box, Button } from "@mui/material";
-import { deepOrange } from "@mui/material/colors";
 import {
   Code as CodeIcon,
   Podcasts as PodcastsIcon,
@@ -11,13 +10,8 @@ import {
 import { useAuth } from "context/use-auth";
 import { LoginRoute } from "ui/auth/auth.login";
 import { AuthVerifier } from "ui/components/auth/auth.verifier";
-import { CreateCode } from "./code-editor/code-editor.create";
-import { CreateUser } from "./users/user.create";
-import { UpdateUser } from "./users/user.edit";
-import { ListUsers } from "./users/user.list";
-import { isLiveSelector } from "domain/state/general-application.recoil";
-import { useRecoilValue } from "recoil";
 import { LiveShow } from "./live/live.show";
+import { BigHead } from "@bigheads/core";
 
 import "./index.css";
 import "root.css";
@@ -25,14 +19,19 @@ import logo from "./assets/logo.png";
 import { HomePage } from "./home/home.show";
 import { Dashboard } from "./dashboard/dashboard.show";
 import { UserProfileRegistration } from "./user-profile/user-profile.create";
+import { UserCodeOfConduct } from "./user-profile/user-code-of-conduct";
 
-function NotLogged({ pathname, search, hash }: any) {
+function NotLogged({ pathname }: Location) {
   if (pathname === "/") {
     return <HomePage />;
   }
 
   if (pathname === "/register") {
     return <UserProfileRegistration />;
+  }
+
+  if (pathname === "/code-of-conduct") {
+    return <UserCodeOfConduct />;
   }
 
   return <LoginRoute />;
@@ -50,8 +49,6 @@ export function ApplicationRoutes() {
   const setLinkActive = (path: string) =>
     activePath.startsWith(path) ? "active" : "";
 
-  const isOnline = useRecoilValue(isLiveSelector);
-
   useEffect(() => {
     setActivePath(location.pathname);
   }, [auth.user, history, location.pathname]);
@@ -60,21 +57,29 @@ export function ApplicationRoutes() {
     <>
       <AuthVerifier />
       {location.pathname !== "/" && (
-        <div id="sidebar">
+        <Box
+          id="sidebar"
+          sx={{
+            width: "22rem",
+            backgroundColor: "#f7f7f7",
+            borderRight: "solid 1px #e3e3e3",
+          }}
+        >
           <nav>
-            <img
-              src={logo}
-              className="App-logo"
-              alt="Logo"
-              style={{ margin: "0 auto", marginBottom: 50, width: 128 }}
-            />
+            <Box
+              sx={{
+                marginBottom: 10,
+                width: 128,
+              }}
+            >
+              <img src={logo} alt="what'd you learn today?" />
+            </Box>
             <ul>
               <li color={"success"}>
                 <Link className={setLinkActive("/live")} to="/live">
                   Live <PodcastsIcon color={"success"} />
                 </Link>
               </li>
-              {/* {isOnline ?? ()} */}
               <li>
                 <Link className={setLinkActive("/code")} to="/code/new">
                   Code <CodeIcon />
@@ -91,8 +96,13 @@ export function ApplicationRoutes() {
             }}
           >
             <Link className={setLinkActive("/settings")} to="/settings">
-              <Avatar sx={{ bgcolor: deepOrange[500] }}>
-                {auth.user?.userName.slice(0, 1)}
+              <Avatar sx={{ width: 60, height: 60 }}>
+                {!auth.user.userProfileImage && auth.user?.userName.slice(0, 1)}
+                {auth.user.userProfileImage && (
+                  <Box sx={{ width: 60 }}>
+                    <BigHead {...JSON.parse(auth.user.userProfileImage)} />
+                  </Box>
+                )}
               </Avatar>
             </Link>
             <Button
@@ -104,15 +114,15 @@ export function ApplicationRoutes() {
               Logout
             </Button>
           </Box>
-        </div>
+        </Box>
       )}
-      <div id="detail" style={{ overflow: "scroll" }}>
+      <Box sx={{ flex: 1, width: "100%" }}>
         <Switch>
           <Route exact path="/">
             <HomePage />
           </Route>
-          <Route exact path="/register">
-            <UserProfileRegistration />
+          <Route exact path="/code-of-conduct">
+            <UserCodeOfConduct />
           </Route>
           <Route exact path="/dashboard">
             <Dashboard />
@@ -120,22 +130,11 @@ export function ApplicationRoutes() {
           <Route exact path="/login">
             <LoginRoute />
           </Route>
-          <Route exact path={"/code/new"}>
-            <CreateCode />
-          </Route>
-          <Route path={"/live/:id?"}>
+          <Route exact path={"/live/:id?"}>
             <LiveShow />
           </Route>
-          <Route exact path={"/users"} children={<ListUsers />} />
-          <Route path={"/users/new"}>
-            <CreateUser />
-          </Route>
-          <Route path={"/users/:id"}>
-            <UpdateUser />
-          </Route>
-          {/* <Route component={HomePage} /> */}
         </Switch>
-      </div>
+      </Box>
     </>
   ) : (
     <NotLogged {...location} />

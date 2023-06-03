@@ -22,9 +22,7 @@ export class UserService implements IUserService {
   async findUserByEmail(userEmail: string) {
     return this.userRepository
       .createQueryBuilder()
-      .from(User, "u")
-      .select(["u.id", "u.email", "u.name", "u.role", "u.password"])
-      .where("u.email = :userEmail", { userEmail })
+      .where("email = :userEmail", { userEmail })
       .getOne();
   }
 
@@ -37,12 +35,7 @@ export class UserService implements IUserService {
   }
 
   async findAll(params: FilterUsersDTO) {
-    const users = await this.userRepository
-      .createQueryBuilder()
-      .from(User, "u")
-      .select(["u.id", "u.name", "u.email", "u.createdAt", "u.updatedAt"])
-      .where(params)
-      .getMany();
+    const users = await this.userRepository.createQueryBuilder().where(params).getMany();
 
     return {
       code: "USERS_LIST",

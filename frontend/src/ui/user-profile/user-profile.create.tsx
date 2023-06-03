@@ -1,34 +1,69 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
-import { TextField, Button, Box, FormControl, Grid } from "@mui/material";
-import { CreateUserDTO } from "ui/users/user.interfaces";
+import {
+  TextField,
+  Button,
+  Box,
+  FormControl,
+  Grid,
+  InputAdornment,
+  IconButton,
+  Typography,
+} from "@mui/material";
+import { CreateUserDTO, UserDTO } from "ui/users/user.interfaces";
 import { useCases } from "context/use-cases";
-import { TErrorMessage } from "ui/components/error";
-import { Redirect } from "react-router-dom";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { AvatarInput } from "./avatar-input";
+import { AvatarInput } from "../components/avatar/bigheads/avatar-input";
+
+import { EmailOutlined } from "@mui/icons-material";
+
+import { TErrorMessage } from "ui/components/error";
+import {
+  ResourceErrors,
+  TResourceErrors,
+} from "ui/components/error/resource-errors";
+import { usePasswordVisibility } from "ui/components/inputs/password-visibility.component";
+import { Link, useHistory } from "react-router-dom";
+import { ArrowBack } from "@mui/icons-material";
+import Checkbox from "@mui/material/Checkbox";
 
 export function UserProfileRegistration() {
   const {
-    UserUseCases: { create },
+    UserUseCases: { createUserProfile },
   } = useCases();
 
-  const initialFormState = {
+  const history = useHistory();
+
+  const { passAdornVisible, PasswordVisibilityAdornment } =
+    usePasswordVisibility();
+
+  const initialFormState: CreateUserDTO = {
     name: "",
     email: "",
-    role: "",
     password: "",
     passwordConfirmation: "",
+    profileImage: "",
+    codeConductAccept: false,
   };
 
   const [user, setUser] = useState<CreateUserDTO>(initialFormState);
-  const [userProfileImage, setUserProfileImage] = useState<string>("");
 
   const [formInputErrors, setFormInputErrors] =
     useState<CreateUserDTO>(initialFormState);
 
   const reset = () => {
     setFormInputErrors(initialFormState);
+  };
+
+  const [codeOfConductCheck, setCodeOfConductCheck] = useState(false);
+
+  const handleCodeOfConductAccept = (event: ChangeEvent<HTMLInputElement>) => {
+    setCodeOfConductCheck(event.target.checked);
+
+    setUser((prevState) => ({
+      ...prevState,
+      codeConductAccept: event.target.checked,
+    }));
   };
 
   const handleInputChange = (
@@ -45,24 +80,41 @@ export function UserProfileRegistration() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // userProfileImage
+    if (!codeOfConductCheck || !user.codeConductAccept) {
+      toast.error(
+        "Por favor, aceite o nosso código de conduta. É obrigatório! Se precisar, leia mais no link informado.",
+        {
+          autoClose: 3500,
+        }
+      );
+      return;
+    }
 
-    create(user, {
-      onSuccess: () => {
-        setInterval(() => {
-          reset();
+    createUserProfile(user, {
+      onSuccess: (user: UserDTO) => {
+        reset();
 
-          toast.success("Yay!");
-
-          return <Redirect to={"/"} />;
-        }, 2000);
-      },
-      onError: ({ errors }: TErrorMessage) => {
-        setFormInputErrors({
-          name: errors.name,
-          email: errors.email,
-          password: errors.password,
+        toast.success("Yay!", {
+          autoClose: 2000,
+          onClose: () => {
+            history.push("/");
+          },
         });
+      },
+      onError: ({ title, errors }: TErrorMessage) => {
+        if (title === "ValidationError") {
+          setFormInputErrors({
+            name: errors.name,
+            email: errors.email,
+            password: errors.password,
+            passwordConfirmation: errors.passwordConfirmation,
+            codeConductAccept: errors.codeConductAccept,
+          });
+        } else {
+          toast(
+            <ResourceErrors title={title} {...(errors as TResourceErrors)} />
+          );
+        }
       },
     });
   };
@@ -71,71 +123,148 @@ export function UserProfileRegistration() {
     <Grid
       container
       style={{
-        margin: 200,
+        marginTop: 30,
         justifyContent: "center",
         display: "flex",
         flexDirection: "row",
         flexWrap: "wrap",
-        padding: 20,
       }}
     >
       <form onSubmit={handleSubmit}>
-        <FormControl style={{ backgroundColor: "white", padding: 20 }}>
-          <AvatarInput {...setUserProfileImage} />
-          <h3 className="form-title">Usuário</h3>
+        <FormControl
+          style={{ minWidth: "450px", backgroundColor: "white", padding: 20 }}
+        >
+          <Typography sx={{ display: "flex", justifyContent: "center" }}>
+            bora, passa os dados pra cá!
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              fontSize: "0.7rem",
+              color: "rgba(0, 0, 0, 0.6)",
+              background: "white",
+              padding: "4px",
+              borderRadius: "4px",
+              justifyContent: "center",
+              display: "flex",
+            }}
+          >
+            calma! não vou fazer nada com eles 😅
+          </Typography>
+          <AvatarInput setUserProfileImage={setUser} />
           <Grid item style={{ margin: 10 }}>
             <TextField
-              label="Seu nome :)"
+              placeholder="seu nome :)"
+              label="Nome"
               name="name"
               value={user.name}
               onChange={handleInputChange}
               error={!!formInputErrors.name}
               helperText={formInputErrors.name}
               fullWidth
-            />
-            <TextField
-              label="Seu email"
-              name="email"
-              value={user.email}
-              onChange={handleInputChange}
-              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AccountCircleIcon />
+                  </InputAdornment>
+                ),
+              }}
             />
           </Grid>
           <Grid item style={{ margin: 10 }}>
             <TextField
-              label="Password"
-              name="password"
-              type="password"
-              value={user.password}
+              placeholder="seuemail@email.com"
+              label="Email"
+              name="email"
+              value={user.email}
               onChange={handleInputChange}
+              error={!!formInputErrors.email}
+              helperText={formInputErrors.email}
               fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <EmailOutlined />
+                  </InputAdornment>
+                ),
+              }}
             />
-
+          </Grid>
+          <Grid item style={{ margin: 10 }}>
             <TextField
-              label="Repeat Password"
+              placeholder="sua senha s3cReT@"
+              label="Senha"
+              name="password"
+              value={user.password}
+              type={passAdornVisible ? "text" : "password"}
+              onChange={handleInputChange}
+              error={!!formInputErrors.password}
+              helperText={formInputErrors.password}
+              fullWidth
+              InputProps={{
+                startAdornment: <PasswordVisibilityAdornment />,
+              }}
+            />
+          </Grid>
+          <Grid item style={{ margin: 10 }}>
+            <TextField
+              placeholder="faz igual a outra, hein!"
+              label="Repita a senha"
               name="passwordConfirmation"
-              type="password"
+              type={passAdornVisible ? "text" : "password"}
               value={user.passwordConfirmation}
               onChange={handleInputChange}
               fullWidth
+              error={!!formInputErrors.passwordConfirmation}
+              helperText={formInputErrors.passwordConfirmation}
+              InputProps={{
+                startAdornment: <PasswordVisibilityAdornment />,
+              }}
             />
           </Grid>
 
-          <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
+          <Grid container spacing={1} alignItems="center">
+            <Grid item>
+              <Checkbox
+                checked={codeOfConductCheck}
+                onChange={handleCodeOfConductAccept}
+              />
+            </Grid>
+            <Grid item sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <Typography variant="body1" color="textSecondary">
+                Eu aceito o{" "}
+                <Link to="/code-of-conduct" style={{ color: "crimson" }}>
+                  Código de Conduta
+                </Link>
+              </Typography>
+            </Grid>
+          </Grid>
+
+          <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
+            <IconButton onClick={() => history.push("/login")}>
+              <ArrowBack />
+            </IconButton>
             <Button
               variant="contained"
-              color="secondary"
-              type="submit"
-              startIcon={<AccountCircleIcon />}
               sx={{
-                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
-                padding: "10px 20px",
-                margin: "10px",
-                borderRadius: "4px",
-                backgroundColor: "#FFFFFF",
+                marginRight: 2,
+                bgcolor: "secondary.main",
+                color: "crimson",
+                "&:hover": {
+                  bgcolor: "#9146FF",
+                  color: "secondary.main",
+                },
+                "& .MuiButton-startIcon": {
+                  display: "flex",
+                  justifyContent: "center",
+                  marginRight: "4px",
+                },
               }}
+              color="secondary"
+              startIcon={<AccountCircleIcon />}
+              type="submit"
             >
-              Create Your Account
+              Crie sua Conta
             </Button>
           </Box>
         </FormControl>

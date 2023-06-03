@@ -69,11 +69,6 @@ export class CreateCodeEditorDTO extends PartialType(
     message: "Precisa informar se a live foi iniciada.",
   })
   live: boolean;
-
-  @IsNotEmpty({
-    message: "Precisa informar a data de criação.",
-  })
-  createdAt?: Date;
 }
 
 export class UpdateCodeEditorDTO extends PartialType(CreateCodeEditorDTO) {

@@ -65,7 +65,7 @@ export function create(
     )
     .catch((validationErrors: ValidationError) =>
       onError({
-        title: "Validation errors",
+        title: "ValidationError",
         errors: mapperYupErrorsToErrorMessages(validationErrors),
       })
     );

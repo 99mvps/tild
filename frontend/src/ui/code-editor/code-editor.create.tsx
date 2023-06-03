@@ -7,6 +7,7 @@ import {
   Grid,
   FormHelperText,
   Autocomplete,
+  Box,
 } from "@mui/material";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import { TErrorMessage } from "ui/components/error";
@@ -17,6 +18,11 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { isLiveSelector } from "domain/state/general-application.recoil";
 import { CreateCodeEditorDTO } from "./code-editor.interfaces";
 import { codeEditorLangsDropDownList } from "./code-editor.mapper";
+import { toast } from "react-toastify";
+import {
+  ResourceErrors,
+  TResourceErrors,
+} from "ui/components/error/resource-errors";
 
 /**
  * Users form creation
@@ -79,11 +85,17 @@ export function CreateCode(): JSX.Element {
           },
         });
       },
-      onError: ({ errors }: TErrorMessage) => {
-        setFormInputErrors({
-          title: errors.title,
-          lang: errors.lang,
-        });
+      onError: ({ title, errors }: TErrorMessage) => {
+        if (title === "ValidationError") {
+          setFormInputErrors({
+            title: errors.title,
+            lang: errors.lang,
+          });
+          return;
+        }
+        toast(
+          <ResourceErrors title={title} {...(errors as TResourceErrors)} />
+        );
       },
     });
   };
@@ -147,7 +159,7 @@ export function CreateCode(): JSX.Element {
               )}
             />
           </Grid>
-          <div className="button-right" style={{ margin: "20px 10px 30px 0" }}>
+          <Box className="button-right" style={{ margin: "20px 10px 30px 0" }}>
             <Button
               variant="contained"
               color="primary"
@@ -162,7 +174,7 @@ export function CreateCode(): JSX.Element {
               <SaveAsIcon style={{ marginRight: 15 }} />
               Go live!
             </Button>
-          </div>
+          </Box>
         </FormControl>
       </Grid>
     </>

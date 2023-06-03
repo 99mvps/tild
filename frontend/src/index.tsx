@@ -8,7 +8,8 @@ import { Root } from "ui/root";
 
 import reportWebVitals from "./reportWebVitals";
 
-import { Toaster } from "react-hot-toast";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { RecoilRoot } from "recoil";
 
@@ -16,6 +17,7 @@ const theme = createTheme({
   palette: {
     background: {
       default: "#252525",
+      paper: "#f5f5f5",
     },
     primary: {
       main: "#252525",
@@ -57,7 +59,18 @@ root.render(
       <CssBaseline />
       <RecoilRoot key={Math.random()}>
         <Root />
-        <Toaster />
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </RecoilRoot>
     </ThemeProvider>
   </React.StrictMode>

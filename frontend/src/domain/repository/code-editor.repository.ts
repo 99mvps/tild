@@ -28,7 +28,7 @@ export class CodeEditorRepository
    * @memberof CodeEditorRepository
    */
   async create(codeEditor: CreateCodeEditorDTO) {
-    const editorCreationResponse = await this.http.request({
+    const response = await this.http.request({
       method: "POST",
       url: this.apiEndpoint,
       body: {
@@ -37,13 +37,10 @@ export class CodeEditorRepository
       },
     });
 
-    const { data, message } = await editorCreationResponse.json();
-
-    if (!editorCreationResponse.ok) {
-      throw new Error("Erro ao criar o editor de código!", {
-        cause: message,
-      });
-    }
+    const { data } = await this.requestHandler(
+      response,
+      "Erro ao criar editor de código."
+    );
 
     return data;
   }
@@ -56,19 +53,13 @@ export class CodeEditorRepository
   async getAll(queryFilter: FilterCodeEditorDTO) {
     this.setSearchParams<FilterCodeEditorDTO>(queryFilter);
 
-    const getAllEditors = await this.http.request({
+    const response = await this.http.request({
       url: this.apiEndpoint,
     });
 
-    const response = await getAllEditors.json();
+    const { data } = await this.requestHandler(response, "Erro ao buscar!");
 
-    if (!getAllEditors.ok) {
-      throw new Error("Erro ao buscar!", {
-        cause: response.message,
-      });
-    }
-
-    return response;
+    return data;
   }
 
   /**
@@ -81,15 +72,12 @@ export class CodeEditorRepository
       url: this.apiEndpoint.concat(`/${codeEditorId}`),
     });
 
-    const jsonResponse = await response.json();
+    const { data } = await this.requestHandler(
+      response,
+      "Erro ao buscar o editor de código!"
+    );
 
-    if (!response.ok) {
-      throw new Error("Erro ao buscar o editor de código!", {
-        cause: jsonResponse.message,
-      });
-    }
-
-    return jsonResponse;
+    return data;
   }
 
   /**
@@ -103,14 +91,11 @@ export class CodeEditorRepository
       url: this.apiEndpoint.concat(`/${codeEditorId}`),
     });
 
-    const jsonResponse = await response.json();
+    const { data } = await this.requestHandler(
+      response,
+      "Erro ao excluir editor de código."
+    );
 
-    if (!response.ok) {
-      throw new Error("Erro ao remove o editor de código!", {
-        cause: jsonResponse.message,
-      });
-    }
-
-    return jsonResponse;
+    return data;
   }
 }

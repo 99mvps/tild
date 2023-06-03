@@ -12,11 +12,11 @@ interface UserPermissionMap {
 
 export class Permission {
   readonly rootPath = "/";
+  readonly dashboardPath = "/dasboard";
 
   private allowedList: string[];
 
   constructor(user: JWTUserToken) {
-    console.log({ user });
     this.allowedList = user?.userPermissions?.allowedPaths ?? "prato";
   }
 
@@ -26,13 +26,13 @@ export class Permission {
         allowed: this.allowedList.some((allowedPath) =>
           path.startsWith(allowedPath)
         ),
-        redirectTo: "/dashboard",
+        redirectTo: this.dashboardPath,
       }),
       [UserRoles.USER]: (path: string) => ({
         allowed: this.allowedList.some((allowedPath) =>
           path.startsWith(allowedPath)
         ),
-        redirectTo: this.rootPath,
+        redirectTo: this.dashboardPath,
       }),
     };
 
@@ -40,14 +40,18 @@ export class Permission {
   }
 
   public checkPermission(role = UserRoles.USER, path: string): UserPermission {
-    if (path === this.rootPath) {
-      return {
-        allowed: true,
-        redirectTo: this.rootPath,
-      };
-    }
-    const userPermission = this.getUserPermission(role);
+    return {
+      allowed: true,
+      redirectTo: this.rootPath,
+    };
+    // if (path === this.rootPath) {
+    //   return {
+    //     allowed: true,
+    //     redirectTo: this.rootPath,
+    //   };
+    // }
+    // const userPermission = this.getUserPermission(role);
 
-    return userPermission(path);
+    // return userPermission(path);
   }
 }

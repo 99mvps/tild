@@ -30,6 +30,12 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ name: "profile_image", default: null })
+  profileImage?: string;
+
+  @Column({ name: "code_conduct_accept", default: null })
+  codeConductAccept: boolean;
+
   @CreateDateColumn({ name: "created_at" })
   createdAt?: Date;
 

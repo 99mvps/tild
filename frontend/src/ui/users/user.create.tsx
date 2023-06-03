@@ -17,12 +17,13 @@ export function CreateUser(): JSX.Element {
   } = useCases();
 
   const history = useHistory();
-  const initialFormState = {
+  const initialFormState: CreateUserDTO = {
     name: "",
     email: "",
     role: "",
     password: "",
     passwordConfirmation: "",
+    codeConductAccept: true,
   };
 
   const [formInput, setFormInput] = useState<CreateUserDTO>(initialFormState);
@@ -60,6 +61,7 @@ export function CreateUser(): JSX.Element {
           email: errors.email,
           role: errors.role,
           password: errors.password,
+          codeConductAccept: errors.codeConductAccept,
         });
       },
     });

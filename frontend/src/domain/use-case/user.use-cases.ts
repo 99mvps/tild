@@ -11,11 +11,19 @@ import { mapperYupErrorsToErrorMessages } from "domain/yup.mapper-errors";
 
 import { TErrorMessage } from "ui/components/error";
 import { BaseRepository } from "domain/repository";
-import { userValidation } from "../validations/user.validation";
+import {
+  userProfileValidation,
+  userValidation,
+} from "../validations/user.validation";
 
 type UserUseCaseReturn = {
   onSuccess: (user?: UserDTO | UserDTO[] | undefined) => void;
   onError: (errors: TErrorMessage) => void;
+};
+
+type UserProfileUseCaseReturn = {
+  onSuccess: (user: UserDTO) => void;
+  onError: (error: TErrorMessage) => void;
 };
 
 type LoadUserUseCaseReturn = {
@@ -32,6 +40,10 @@ export type TUserUseCase = {
   create(
     formInput: CreateUserDTO,
     { onSuccess, onError }: UserUseCaseReturn
+  ): void;
+  createUserProfile(
+    formInput: CreateUserDTO,
+    { onSuccess, onError }: UserProfileUseCaseReturn
   ): void;
   edit(user: UpdateUserDTO, { onSuccess, onError }: UserUseCaseReturn): void;
   remove(user: UserDTO, { onSuccess, onError }: UserUseCaseReturn): void;
@@ -67,7 +79,35 @@ export function create(
     )
     .catch((validationErrors: ValidationError) =>
       onError({
-        title: "Validation errors",
+        title: "ValidationError",
+        errors: mapperYupErrorsToErrorMessages(validationErrors),
+      })
+    );
+}
+
+export function createUserProfile(
+  formInput: CreateUserDTO,
+  { onSuccess, onError }: UserProfileUseCaseReturn
+) {
+  const { user: userRepository } = BaseRepository();
+  userProfileValidation
+    .validate(formInput, {
+      abortEarly: false,
+    })
+    .then(() =>
+      userRepository
+        .create(formInput)
+        .then((user: UserDTO) => onSuccess(user))
+        .catch((error: any) =>
+          onError({
+            title: error.message,
+            errors: error.cause,
+          })
+        )
+    )
+    .catch((validationErrors: ValidationError) =>
+      onError({
+        title: "ValidationError",
         errors: mapperYupErrorsToErrorMessages(validationErrors),
       })
     );
@@ -95,7 +135,7 @@ export function edit(
     )
     .catch((validationErrors: ValidationError) => {
       onError({
-        title: "Validation errors",
+        title: "ValidationError",
         errors: mapperYupErrorsToErrorMessages(validationErrors),
       });
     });

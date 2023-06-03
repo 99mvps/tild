@@ -9,6 +9,7 @@ import {
   IsEmail,
   MaxLength,
   IsEnum,
+  IsBoolean,
 } from "class-validator";
 import { UserRoles } from "../user.enum";
 
@@ -30,6 +31,44 @@ export class CreateUserDTO extends PartialType(
     message: "Deve informar o nome do usuário.",
   })
   name: string;
+
+  @ApiProperty({
+    name: "codeConductAccept",
+    description: "Check de aceitção do código de conduta.",
+  })
+  @IsNotEmpty({
+    message: "Deve aceitar o código de conduta.",
+  })
+  @IsBoolean()
+  codeConductAccept: boolean;
+
+  @ApiProperty({
+    name: "profileImage",
+    description: "O nome do usuário.",
+    example: {
+      skinTone: "black",
+      eyes: "normal",
+      eyebrows: "serious",
+      mouth: "grin",
+      hair: "short",
+      facialHair: "none2",
+      clothing: "shirt",
+      accessory: "none",
+      graphic: "vue",
+      hat: "none4",
+      body: "chest",
+      hairColor: "black",
+      clothingColor: "white",
+      circleColor: "blue",
+      lipColor: "green",
+      hatColor: "white",
+      faceMaskColor: "black",
+      mask: true,
+      faceMask: false,
+      lashes: true,
+    },
+  })
+  profileImage?: string;
 
   @ApiProperty({
     name: "email",

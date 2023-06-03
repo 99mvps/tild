@@ -12,6 +12,7 @@ export type JWTUserToken = {
   sub: string;
   userEmail: string;
   userName: string;
+  userProfileImage: string;
   userRole: UserRoles;
   userPermissions: {
     allowedPaths: string[];

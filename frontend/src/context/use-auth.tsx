@@ -14,8 +14,12 @@ import { JWTUserToken } from "ui/auth/auth.interfaces";
 import { ITokenStorage } from "infrastructure/adapter/storage/token";
 import { useCases } from "./use-cases";
 import { TErrorMessage } from "ui/components/error";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import { Permission } from "domain/permissions";
+import {
+  ResourceErrors,
+  TResourceErrors,
+} from "ui/components/error/resource-errors";
 
 type Auth = {
   user: JWTUserToken | undefined;
@@ -49,7 +53,7 @@ function useProvideAuth(token: ITokenStorage) {
     const redirectPaths = {
       [UserRoles.ADMIN]: "/dashboard",
       [UserRoles.STREAMER]: "/dashboard",
-      [UserRoles.USER]: "/",
+      [UserRoles.USER]: "/dashboard",
     };
 
     return (role: UserRoles) => redirectPaths[role];
@@ -74,7 +78,9 @@ function useProvideAuth(token: ITokenStorage) {
             setUser(token.get());
           },
           onError: ({ title, errors }: TErrorMessage) => {
-            toast.error(`${title}: "${errors}"`);
+            toast(
+              <ResourceErrors title={title} {...(errors as TResourceErrors)} />
+            );
           },
         }
       );

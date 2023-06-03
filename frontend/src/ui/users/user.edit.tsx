@@ -22,13 +22,15 @@ export function UpdateUser(): JSX.Element {
 
   const history = useHistory();
 
-  const initialFormState = {
+  const initialFormState: UpdateUserDTO = {
     id: "",
     name: "",
     email: "",
     role: "",
     password: "",
     passwordConfirmation: "",
+    codeConductAccept: true,
+    profileImage: "",
   };
 
   const [formInput, setFormInput] = useState<UpdateUserDTO>(initialFormState);
@@ -69,7 +71,7 @@ export function UpdateUser(): JSX.Element {
     edit(formInput, {
       onSuccess: () =>
         setSuccess({
-          message: "Usuário criado com sucesso!",
+          message: "Usuário editado com sucesso!",
           duration: 2500,
           handlerOnClose: () => {
             reset();
@@ -82,6 +84,7 @@ export function UpdateUser(): JSX.Element {
           email: errors.email,
           role: errors.role,
           password: errors.password,
+          codeConductAccept: errors.codeConductAccept,
         });
       },
     });

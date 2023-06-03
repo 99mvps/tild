@@ -14,4 +14,14 @@ const userValidation = object().shape({
     .required("Precisa escolher um tipo de usuário."),
 });
 
-export { userValidation };
+const userProfileValidation = object().shape({
+  name: string().required("Nome é necessário."),
+  email: string().email("Email inválido.").required("Email is required"),
+  password: string().required("Senha é obrigatória."),
+  passwordConfirmation: string().oneOf(
+    [ref("password"), ""],
+    "Senhas devem ser iguais"
+  ),
+});
+
+export { userValidation, userProfileValidation };

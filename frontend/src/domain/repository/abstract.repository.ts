@@ -56,4 +56,16 @@ export abstract class AbstractRepository {
       });
     }
   }
+
+  async requestHandler(response: Response, errorMessage: string) {
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(errorMessage, {
+        cause: result,
+      });
+    }
+
+    return result;
+  }
 }

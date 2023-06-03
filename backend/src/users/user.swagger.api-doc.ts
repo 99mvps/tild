@@ -66,8 +66,35 @@ export function CreateUserApiDoc() {
               },
               profileImage: {
                 type: "string",
-                example:
-                  '"{"skinTone":"black","eyes":"normal","eyebrows":"serious","mouth":"grin","hair":"short","facialHair":"none2","clothing":"shirt","accessory":"none","graphic":"vue","hat":"none4","body":"chest","hairColor":"black","clothingColor":"white","circleColor":"blue","lipColor":"green","hatColor":"white","faceMaskColor":"black","mask":true,"faceMask":false,"lashes":true}"',
+                examples: [
+                  {
+                    skinTone: "black",
+                    eyes: "normal",
+                    eyebrows: "serious",
+                    mouth: "grin",
+                    hair: "short",
+                    facialHair: "none2",
+                    clothing: "shirt",
+                    accessory: "none",
+                    graphic: "vue",
+                    hat: "none4",
+                    body: "chest",
+                    hairColor: "black",
+                    clothingColor: "white",
+                    circleColor: "blue",
+                    lipColor: "green",
+                    hatColor: "white",
+                    faceMaskColor: "black",
+                    mask: true,
+                    faceMask: false,
+                    lashes: true,
+                  },
+                  "string",
+                ],
+              },
+              codeConductAccept: {
+                type: "boolean",
+                example: "true",
               },
               role: {
                 type: "string",

@@ -10,7 +10,7 @@ import {
   liveShowState,
 } from "domain/state/live-show.recoil";
 import { TErrorMessage } from "ui/components/error";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 
 /**
  * The `"/path/:id"` param is a param that matches on the route and is treated as a value that needs to be fetched

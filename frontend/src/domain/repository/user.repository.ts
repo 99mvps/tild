@@ -45,15 +45,12 @@ export class UserRepository
       body: user,
     });
 
-    const jsonResponse = await response.json();
+    const { data } = await this.requestHandler(
+      response,
+      "Erro ao criar o usuário"
+    );
 
-    if (!response.ok) {
-      throw new Error("Erro ao criar o usuário!", {
-        cause: jsonResponse.message,
-      });
-    }
-
-    return jsonResponse;
+    return data;
   }
 
   /**
@@ -68,15 +65,12 @@ export class UserRepository
       body: user,
     });
 
-    const jsonResponse = await response.json();
+    const { data } = await this.requestHandler(
+      response,
+      "Erro ao editar o usuário"
+    );
 
-    if (!response.ok) {
-      throw new Error("Erro ao editar o usuário!", {
-        cause: jsonResponse.message,
-      });
-    }
-
-    return jsonResponse;
+    return data;
   }
 
   /**
@@ -90,15 +84,12 @@ export class UserRepository
       url: this.apiEndpoint.concat(`/${id}`),
     });
 
-    const jsonResponse = await response.json();
+    const { data } = await this.requestHandler(
+      response,
+      "Erro ao remover o usuário"
+    );
 
-    if (!response.ok) {
-      throw new Error("Erro ao remove o usuário!", {
-        cause: jsonResponse.message,
-      });
-    }
-
-    return jsonResponse;
+    return data;
   }
 
   /**
@@ -113,15 +104,12 @@ export class UserRepository
       url: this.apiEndpoint,
     });
 
-    const jsonResponse = await response.json();
+    const { data } = await this.requestHandler(
+      response,
+      "Erro ao buscar o usuário"
+    );
 
-    if (!response.ok) {
-      throw new Error("Erro ao buscar o usuário!", {
-        cause: jsonResponse.message,
-      });
-    }
-
-    return jsonResponse;
+    return data;
   }
 
   /**
@@ -134,14 +122,11 @@ export class UserRepository
       url: this.apiEndpoint.concat(`/${id}`),
     });
 
-    const jsonResponse = await response.json();
+    const { data } = await this.requestHandler(
+      response,
+      "Erro ao buscar o usuário"
+    );
 
-    if (!response.ok) {
-      throw new Error("Erro ao buscar o usuário!", {
-        cause: jsonResponse.message,
-      });
-    }
-
-    return jsonResponse;
+    return data;
   }
 }
