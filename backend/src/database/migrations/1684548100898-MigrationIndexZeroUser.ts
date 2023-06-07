@@ -4,7 +4,7 @@ export class MigrationIndexZeroUser1684548100898 implements MigrationInterface {
   name = "MigrationIndexZeroUser1684548100898";
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    const hashedPassword = await bcrypt.hash("123123", 1_0);
+    const hashedPassword = await bcrypt.hash("5 Caxorrros fumandO", 1_0);
 
     await queryRunner.query(`
           insert into users 

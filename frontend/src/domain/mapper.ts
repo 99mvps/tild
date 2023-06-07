@@ -1,3 +1,9 @@
+export type MUIDropDownList = {
+  id: string;
+  label: string;
+  firstLetter?: string;
+};
+
 interface Mapper<T, U> {
   (data: T): U;
 }

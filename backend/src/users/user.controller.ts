@@ -15,7 +15,7 @@ import {
   DeleteUserApiDoc,
   GetAllUsersApiDoc,
   UpdateUserApiDoc,
-} from "./user.controller.api-doc";
+} from "./user.swagger.api-doc";
 
 import { UserService } from "./user.service";
 import { CreateUserDTO } from "./dto/user.create.dto";

@@ -20,25 +20,10 @@ export class UserService implements IUserService {
   ) {}
 
   async findUserByEmail(userEmail: string) {
-    return this.userRepository.findOne({
-      where: {
-        email: userEmail,
-      },
-    });
-  }
-
-  async findAll(params: FilterUsersDTO) {
-    const users = await this.userRepository
-      .createQueryBuilder("user")
-      .select(["user.id", "user.name", "user.email", "user.createdAt", "user.updatedAt"])
-      .where(params)
-      .getMany();
-
-    return {
-      code: "USERS_LIST",
-      message: "A lista de usuários.",
-      data: users,
-    };
+    return this.userRepository
+      .createQueryBuilder()
+      .where("email = :userEmail", { userEmail })
+      .getOne();
   }
 
   async find(userId: UUIDVersion): Promise<User | null> {
@@ -47,5 +32,15 @@ export class UserService implements IUserService {
         id: userId as string,
       },
     });
+  }
+
+  async findAll(params: FilterUsersDTO) {
+    const users = await this.userRepository.createQueryBuilder().where(params).getMany();
+
+    return {
+      code: "USERS_LIST",
+      message: "A lista de usuários.",
+      data: users,
+    };
   }
 }

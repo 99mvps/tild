@@ -1,4 +1,11 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, Logger } from "@nestjs/common";
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpStatus,
+  InternalServerErrorException,
+  Logger,
+} from "@nestjs/common";
 
 @Catch()
 export class ExceptionResponseFilter implements ExceptionFilter {
@@ -14,7 +21,12 @@ export class ExceptionResponseFilter implements ExceptionFilter {
 
     this.logger[severity](JSON.stringify(exception, null, 2));
 
-    const details = exception.cause?.detail ?? exception.options?.cause ?? "unknown details";
+    let details = exception.cause?.detail ?? exception.options?.cause ?? "unknown details";
+
+    if (exception instanceof InternalServerErrorException && !process.env.DEBUG) {
+      this.logger.error(JSON.stringify(details, null, 2));
+      details = null;
+    }
 
     const code = exception.name ?? exception.response?.error ?? "unknown code";
 

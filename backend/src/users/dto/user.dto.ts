@@ -19,6 +19,18 @@ export class UsersDTO {
   name: string;
 
   @ApiProperty({
+    description: "Imagem do usuário.",
+    example: "string",
+  })
+  profileImage?: string;
+
+  @ApiProperty({
+    name: "codeConductAccept",
+    description: "Check de aceitção do código de conduta.",
+  })
+  codeConductAccept: boolean;
+
+  @ApiProperty({
     description: "O email do usuário.",
     example: "jhon.doe@email.com",
   })

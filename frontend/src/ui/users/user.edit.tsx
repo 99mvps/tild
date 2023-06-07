@@ -3,9 +3,9 @@ import { useHistory, useParams } from "react-router-dom";
 import { TextField, FormControl, Button, MenuItem, Grid } from "@mui/material";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import { UpdateUserDTO, UserDTO, UserRoles } from "./user.interfaces";
-import { ErrorMessage, TErrorMessage } from "components/error";
-import { SuccessMessage, TSuccessMessageProps } from "components/success";
-import { useCases } from "context";
+import { ErrorMessage, TErrorMessage } from "ui/components/error";
+import { SuccessMessage, TSuccessMessageProps } from "ui/components/success";
+import { useCases } from "context/use-cases";
 
 /**
  * The `"/path/:id"` param is a param that matches on the route and is treated as a value that needs to be fetched
@@ -22,13 +22,15 @@ export function UpdateUser(): JSX.Element {
 
   const history = useHistory();
 
-  const initialFormState = {
+  const initialFormState: UpdateUserDTO = {
     id: "",
     name: "",
     email: "",
     role: "",
     password: "",
     passwordConfirmation: "",
+    codeConductAccept: true,
+    profileImage: "",
   };
 
   const [formInput, setFormInput] = useState<UpdateUserDTO>(initialFormState);
@@ -69,7 +71,7 @@ export function UpdateUser(): JSX.Element {
     edit(formInput, {
       onSuccess: () =>
         setSuccess({
-          message: "Usuário criado com sucesso!",
+          message: "Usuário editado com sucesso!",
           duration: 2500,
           handlerOnClose: () => {
             reset();
@@ -82,6 +84,7 @@ export function UpdateUser(): JSX.Element {
           email: errors.email,
           role: errors.role,
           password: errors.password,
+          codeConductAccept: errors.codeConductAccept,
         });
       },
     });

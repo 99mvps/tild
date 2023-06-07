@@ -1,96 +1,151 @@
 import React, { useEffect, useState } from "react";
-import { Switch, Route, Link, useLocation } from "react-router-dom";
-import { Button } from "@mui/material";
-
-import { useAuth } from "context";
+import { Switch, Link, useHistory, useLocation, Route } from "react-router-dom";
+import { Location } from "history";
+import { Avatar, Box, Button } from "@mui/material";
+import {
+  Podcasts as PodcastsIcon,
+  Logout as LogoutIcon,
+  DashboardCustomize,
+} from "@mui/icons-material";
+import { useAuth } from "context/use-auth";
 import { LoginRoute } from "ui/auth/auth.login";
+import { AuthVerifier } from "ui/components/auth/auth.verifier";
+import { LiveShow } from "./live/live.show";
+import { BigHead } from "@bigheads/core";
 
-import { AuthVerifier } from "components/auth/auth.verifier";
-import CodeIcon from "@mui/icons-material/Code";
-import PodcastsIcon from "@mui/icons-material/Podcasts";
-import SettingsIcon from "@mui/icons-material/Settings";
 import "./index.css";
 import "root.css";
+import logo from "./assets/logo.png";
+import { HomePage } from "./home/home.show";
+import { Dashboard } from "./dashboard/dashboard.show";
+import { UserProfileRegistration } from "./user-profile/user-profile.create";
+import { UserCodeOfConduct } from "./user-profile/user-code-of-conduct";
+
 import { CreateCode } from "./code-editor/code-editor.create";
-import { CreateUser } from "./users/user.create";
-import { UpdateUser } from "./users/user.edit";
-import { ListUsers } from "./users/user.list";
+
+function NotLogged({ pathname }: Location) {
+  if (pathname === "/") {
+    return <HomePage />;
+  }
+
+  if (pathname === "/register") {
+    return <UserProfileRegistration />;
+  }
+
+  if (pathname === "/code-of-conduct") {
+    return <UserCodeOfConduct />;
+  }
+
+  return <LoginRoute />;
+}
 
 export function ApplicationRoutes() {
   let auth = useAuth();
 
-  const location = useLocation<any>();
+  const location: Location = useLocation();
+
+  const history = useHistory();
 
   const [activePath, setActivePath] = useState<string>("/");
 
+  const setLinkActive = (path: string) =>
+    activePath.startsWith(path) ? "active" : "";
+
   useEffect(() => {
     setActivePath(location.pathname);
-  }, [location.pathname]);
+  }, [auth.user, history, location.pathname]);
 
   return auth.user ? (
     <>
       <AuthVerifier />
-      <div id="sidebar">
-        <nav>
-          Bem vindo, {auth.user.userName}
-          <ul>
-            <li>
-              <Link
-                className={activePath === "/live" ? "active" : ""}
-                to="/live"
-              >
-                Live <PodcastsIcon color="error" />
-              </Link>
-            </li>
-            <li>
-              <Link
-                className={activePath === "/code" ? "active" : ""}
-                to="/code"
-              >
-                Code <CodeIcon />
-              </Link>
-            </li>
-            <li>
-              <Link
-                className={activePath === "/settings" ? "active" : ""}
-                to="/settings"
-              >
-                Configurações <SettingsIcon />
-              </Link>
-            </li>
-          </ul>
-        </nav>
-        <div id="logout">
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={() => auth.signout()}
+      {location.pathname !== "/" && (
+        <Box
+          id="sidebar"
+          sx={{
+            width: "22rem",
+            backgroundColor: "#f7f7f7",
+            borderRight: "solid 1px #e3e3e3",
+          }}
+        >
+          <nav>
+            <Box
+              sx={{
+                marginBottom: 10,
+              }}
+            >
+              <img src={logo} alt="what'd you learn today?" />
+            </Box>
+            <ul>
+              <li color={"success"}>
+                <Link className={setLinkActive("/dashboard")} to="/dashboard">
+                  Dashboard <DashboardCustomize />
+                </Link>
+              </li>
+              <li color={"success"}>
+                <Link className={setLinkActive("/live")} to="/live">
+                  Live <PodcastsIcon color={"success"} />
+                </Link>
+              </li>
+            </ul>
+            <Box>
+              <Route exact path="/code/new">
+                <CreateCode />
+              </Route>
+            </Box>
+          </nav>
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
           >
-            Logout
-          </Button>
-        </div>
-      </div>
-      <div id="detail" style={{ overflow: "scroll" }}>
+            <Link className={setLinkActive("/settings")} to="/settings">
+              <Avatar sx={{ width: 60, height: 60 }}>
+                {!auth.user.userProfileImage && auth.user?.userName.slice(0, 1)}
+                {auth.user.userProfileImage && (
+                  <Box sx={{ width: 60 }}>
+                    <BigHead {...JSON.parse(auth.user.userProfileImage)} />
+                  </Box>
+                )}
+              </Avatar>
+            </Link>
+            <Button
+              variant="contained"
+              color="secondary"
+              endIcon={<LogoutIcon />}
+              onClick={() => auth.signout()}
+            >
+              Logout
+            </Button>
+          </Box>
+        </Box>
+      )}
+      <Box sx={{ flex: 1, overflowY: "scroll" }}>
         <Switch>
+          <Route exact path="/">
+            <HomePage />
+          </Route>
+          <Route exact path="/code-of-conduct">
+            <UserCodeOfConduct />
+          </Route>
+          <Route exact path="/code/new">
+            <Dashboard />
+          </Route>
+          <Route exact path="/dashboard">
+            <Dashboard />
+          </Route>
           <Route exact path="/login">
             <LoginRoute />
           </Route>
-          <Route exact path={"/code"} children={<ListUsers />} />
-          <Route path={"/code/new"}>
-            <CreateCode />
-          </Route>
-
-          <Route exact path={"/users"} children={<ListUsers />} />
-          <Route path={"/users/new"}>
-            <CreateUser />
-          </Route>
-          <Route path={"/users/:id"}>
-            <UpdateUser />
+          <Route exact path={"/live/:id?"}>
+            <LiveShow />
           </Route>
         </Switch>
-      </div>
+      </Box>
     </>
   ) : (
-    <LoginRoute />
+    <NotLogged {...location} />
   );
 }

@@ -5,6 +5,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { CreateUserDTO } from "../dto/user.create.dto";
 import { IResourceResponse, ResourceResponse } from "src/app-response.http-filter";
 import { UsersDTO } from "../dto/user.dto";
+import { UserRoles } from "../user.enum";
 
 export interface IUserCreateUseCase {
   execute(user: CreateUserDTO): Promise<IResourceResponse<UsersDTO>>;
@@ -19,15 +20,17 @@ export class UserCreateUseCase implements IUserCreateUseCase {
 
   async execute(user: CreateUserDTO) {
     try {
-      const { id, name, role, email, createdAt } = await this.usersRepository.save(user);
+      // For now every user will be of this type
+      user.role = UserRoles.STREAMER;
+
+      const newUser = await this.usersRepository.save(user);
 
       return new ResourceResponse<UsersDTO>({
         code: CreateUserDTO.success,
         message: CreateUserDTO.successMessage,
-        data: { id, name, role, email, createdAt },
+        data: newUser,
       });
     } catch (error: any) {
-      console.log("eror", error.code);
       if (
         error instanceof QueryFailedError &&
         error.message.includes("duplicate key value violates unique constraint")

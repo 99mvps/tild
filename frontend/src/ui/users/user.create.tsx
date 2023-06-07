@@ -3,9 +3,9 @@ import { useHistory } from "react-router-dom";
 import { TextField, FormControl, Button, MenuItem, Grid } from "@mui/material";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import { CreateUserDTO, UserRoles } from "./user.interfaces";
-import { TErrorMessage } from "components/error";
-import { SuccessMessage, TSuccessMessageProps } from "components/success";
-import { useCases } from "context";
+import { TErrorMessage } from "ui/components/error";
+import { SuccessMessage, TSuccessMessageProps } from "ui/components/success";
+import { useCases } from "context/use-cases";
 
 /**
  * Users form creation
@@ -17,12 +17,13 @@ export function CreateUser(): JSX.Element {
   } = useCases();
 
   const history = useHistory();
-  const initialFormState = {
+  const initialFormState: CreateUserDTO = {
     name: "",
     email: "",
     role: "",
     password: "",
     passwordConfirmation: "",
+    codeConductAccept: true,
   };
 
   const [formInput, setFormInput] = useState<CreateUserDTO>(initialFormState);
@@ -60,6 +61,7 @@ export function CreateUser(): JSX.Element {
           email: errors.email,
           role: errors.role,
           password: errors.password,
+          codeConductAccept: errors.codeConductAccept,
         });
       },
     });

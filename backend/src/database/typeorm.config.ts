@@ -1,3 +1,5 @@
+import { CodeEditor } from "src/code-editor/code-editor.entity";
+import { User } from "src/users/user.entity";
 import { DataSourceOptions } from "typeorm";
 import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
 
@@ -11,7 +13,7 @@ export default {
   migrationsTableName: "tild_migrations",
   subscribers: ["dist/**/*.subscriber{.js,.ts}"],
   migrations: ["dist/database/migrations/*{.js,.ts}"],
-  autoLoadEntities: true,
+  entities: [User, CodeEditor],
   logging: true,
   cli: {
     migrationsDir: "src/database/migrations",

@@ -19,6 +19,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AuthDTO, BearerTokenDTO } from "./auth/dto/auth.dto";
+import { IResourceResponse } from "./app-response.http-filter";
 
 @Controller()
 export class AppController {
@@ -45,7 +46,7 @@ export class AppController {
     type: UnauthorizedException,
   })
   @ApiTags("Login")
-  async login(@Request() req: AuthDTO) {
+  async login(@Request() req: AuthDTO): Promise<IResourceResponse<BearerTokenDTO>> {
     return this.authService.login(req.user);
   }
 

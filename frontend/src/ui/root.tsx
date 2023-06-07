@@ -4,7 +4,8 @@ import { ApplicationRoutes } from "./router";
 
 import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
-import { AuthProvider, UseCasesProvider } from "context";
+import { AuthProvider } from "context/use-auth";
+import { UseCasesProvider } from "context/use-cases";
 
 const history = createBrowserHistory();
 

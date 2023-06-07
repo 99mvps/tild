@@ -2,7 +2,7 @@ export interface IResourceResponse<T> {
   code: string;
   message: string;
   details?: unknown;
-  data?: Partial<T>;
+  data: Partial<T> | null;
 }
 
 export class ResourceResponse<T> implements IResourceResponse<T> {

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
+  Box,
   Button,
   Card,
   CardActions,
@@ -10,14 +11,15 @@ import {
 
 import { Create, PermContactCalendar, HighlightOff } from "@mui/icons-material";
 import { UserDTO } from "./user.interfaces";
-import { ErrorMessage, TErrorMessage } from "components/error";
+import { ErrorMessage, TErrorMessage } from "ui/components/error";
 import {
   DeleteConfirmation,
   TDeleteConfirmation,
-} from "components/delete-confirmation";
+} from "ui/components/delete-confirmation";
 
-import { SuccessMessage, TSuccessMessageProps } from "components/success";
-import { useAuth, useCases } from "context";
+import { SuccessMessage, TSuccessMessageProps } from "ui/components/success";
+import { useAuth } from "context/use-auth";
+import { useCases } from "context/use-cases";
 
 import "./users.css";
 
@@ -84,21 +86,23 @@ export function ListUsers(): JSX.Element {
   }, [loadUsers]);
 
   return (
-    <div className="container-user">
-      <div className="header" style={{ width: "100%" }}>
-        <h1 style={{ marginLeft: 10 }}>Usuários</h1>
-        <div id="new-patient" style={{ margin: 10 }}>
+    <Box className="container-user">
+      <Box className="header" style={{ width: "100%" }}>
+        <Typography variant="h1" style={{ marginLeft: 10 }}>
+          Usuários
+        </Typography>
+        <Box id="new-patient" style={{ margin: 10 }}>
           <Link to={`/users/new`}>
             <Button variant="contained" color="secondary">
               <PermContactCalendar />
               Novo
             </Button>
           </Link>
-        </div>
+        </Box>
         {error && <ErrorMessage {...error} />}
         {success && <SuccessMessage {...success} />}
         {deleteConfirmation && <DeleteConfirmation {...deleteConfirmation} />}
-      </div>
+      </Box>
       {users.map((user: UserDTO, i: number) => {
         return (
           <Card variant="outlined" key={i++} style={{ margin: 10 }}>
@@ -106,20 +110,30 @@ export function ListUsers(): JSX.Element {
               <Typography variant="h5" component="div">
                 {user.name}
               </Typography>
-              <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                <span style={{ fontWeight: "bold" }}>Email:</span>
+              <Typography>
+                <strong>Email: </strong>
                 {user.email}
-                <br />
-                <span style={{ fontWeight: "bold" }}>Role:</span> {user.role}
-                <br />
-                <span style={{ fontWeight: "bold" }}>Criado em:</span>
+              </Typography>
+              <Typography>
+                <strong>Role: </strong>
+                {user.role}
+              </Typography>
+              <Typography>
+                <strong>Criado em: </strong>
                 {new Intl.DateTimeFormat("pt-BR").format(
                   new Date(user.createdAt)
                 )}
-                <br />
-                <span style={{ fontWeight: "bold" }}>Atualizado em:</span>
+              </Typography>
+              <Typography style={{ fontWeight: "bold" }}>
+                <strong>Atualizado em: </strong>
                 {new Intl.DateTimeFormat("pt-BR").format(
                   new Date(user.updatedAt)
+                )}
+              </Typography>
+              <Typography style={{ fontWeight: "bold" }}>
+                <strong>Excluído em: </strong>
+                {new Intl.DateTimeFormat("pt-BR").format(
+                  new Date(user.deletedAt)
                 )}
               </Typography>
             </CardContent>
@@ -130,7 +144,7 @@ export function ListUsers(): JSX.Element {
                   Editar
                 </Button>
               </Link>
-              {auth.user.sub !== user.id && (
+              {auth.user?.sub !== user.id && (
                 <Button
                   style={{ margin: 10 }}
                   onClick={() =>
@@ -154,6 +168,6 @@ export function ListUsers(): JSX.Element {
           </Card>
         );
       })}
-    </div>
+    </Box>
   );
 }
