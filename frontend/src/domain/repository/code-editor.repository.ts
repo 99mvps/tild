@@ -37,7 +37,7 @@ export class CodeEditorRepository
       },
     });
 
-    const { data } = await this.requestHandler(
+    const { data } = await this.responseHandler(
       response,
       "Erro ao criar editor de código."
     );
@@ -57,7 +57,7 @@ export class CodeEditorRepository
       url: this.apiEndpoint,
     });
 
-    const { data } = await this.requestHandler(response, "Erro ao buscar!");
+    const { data } = await this.responseHandler(response, "Erro ao buscar!");
 
     return data;
   }
@@ -72,7 +72,7 @@ export class CodeEditorRepository
       url: this.apiEndpoint.concat(`/${codeEditorId}`),
     });
 
-    const { data } = await this.requestHandler(
+    const { data } = await this.responseHandler(
       response,
       "Erro ao buscar o editor de código!"
     );
@@ -91,7 +91,7 @@ export class CodeEditorRepository
       url: this.apiEndpoint.concat(`/${codeEditorId}`),
     });
 
-    const { data } = await this.requestHandler(
+    const { data } = await this.responseHandler(
       response,
       "Erro ao excluir editor de código."
     );

@@ -5,8 +5,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  ManyToOne,
 } from "typeorm";
 import { Langs } from "./code-editor.enum";
+import { User } from "src/users/user.entity";
 
 @Entity("code_editor")
 export class CodeEditor {
@@ -38,4 +40,7 @@ export class CodeEditor {
 
   @DeleteDateColumn({ name: "deleted_at" })
   deletedAt?: Date;
+
+  @ManyToOne(() => User, (user) => user.codeEditors)
+  user: User;
 }

@@ -12,25 +12,81 @@ export function HomeList() {
       spacing={1}
     >
       <Grid item xs={12} md={6} lg={2}>
-        <CustomCard />
+        <CustomCard
+          codeEditor={{
+            id: "a",
+            lang: "js",
+            live: true,
+            createdAt: new Date(),
+            title: "ola",
+          }}
+        />
       </Grid>
       <Grid item xs={12} md={6} lg={2}>
-        <CustomCard />
+        <CustomCard
+          codeEditor={{
+            id: "a",
+            lang: "js",
+            live: true,
+            createdAt: new Date(),
+            title: "ola",
+          }}
+        />
       </Grid>
       <Grid item xs={12} md={6} lg={2}>
-        <CustomCard />
+        <CustomCard
+          codeEditor={{
+            id: "a",
+            lang: "js",
+            live: true,
+            createdAt: new Date(),
+            title: "ola",
+          }}
+        />
       </Grid>
       <Grid item xs={12} md={6} lg={2}>
-        <CustomCard />
+        <CustomCard
+          codeEditor={{
+            id: "a",
+            lang: "js",
+            live: true,
+            createdAt: new Date(),
+            title: "ola",
+          }}
+        />
       </Grid>
       <Grid item xs={12} md={6} lg={2}>
-        <CustomCard />
+        <CustomCard
+          codeEditor={{
+            id: "a",
+            lang: "js",
+            live: true,
+            createdAt: new Date(),
+            title: "ola",
+          }}
+        />
       </Grid>
       <Grid item xs={12} md={6} lg={2}>
-        <CustomCard />
+        <CustomCard
+          codeEditor={{
+            id: "a",
+            lang: "js",
+            live: true,
+            createdAt: new Date(),
+            title: "ola",
+          }}
+        />
       </Grid>
       <Grid item xs={12} md={6} lg={2}>
-        <CustomCard />
+        <CustomCard
+          codeEditor={{
+            id: "a",
+            lang: "js",
+            live: true,
+            createdAt: new Date(),
+            title: "ola",
+          }}
+        />
       </Grid>
     </Grid>
   );

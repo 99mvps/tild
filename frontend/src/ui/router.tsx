@@ -3,9 +3,9 @@ import { Switch, Link, useHistory, useLocation, Route } from "react-router-dom";
 import { Location } from "history";
 import { Avatar, Box, Button } from "@mui/material";
 import {
-  Code as CodeIcon,
   Podcasts as PodcastsIcon,
   Logout as LogoutIcon,
+  DashboardCustomize,
 } from "@mui/icons-material";
 import { useAuth } from "context/use-auth";
 import { LoginRoute } from "ui/auth/auth.login";
@@ -20,6 +20,8 @@ import { HomePage } from "./home/home.show";
 import { Dashboard } from "./dashboard/dashboard.show";
 import { UserProfileRegistration } from "./user-profile/user-profile.create";
 import { UserCodeOfConduct } from "./user-profile/user-code-of-conduct";
+
+import { CreateCode } from "./code-editor/code-editor.create";
 
 function NotLogged({ pathname }: Location) {
   if (pathname === "/") {
@@ -69,23 +71,27 @@ export function ApplicationRoutes() {
             <Box
               sx={{
                 marginBottom: 10,
-                width: 128,
               }}
             >
               <img src={logo} alt="what'd you learn today?" />
             </Box>
             <ul>
               <li color={"success"}>
+                <Link className={setLinkActive("/dashboard")} to="/dashboard">
+                  Dashboard <DashboardCustomize />
+                </Link>
+              </li>
+              <li color={"success"}>
                 <Link className={setLinkActive("/live")} to="/live">
                   Live <PodcastsIcon color={"success"} />
                 </Link>
               </li>
-              <li>
-                <Link className={setLinkActive("/code")} to="/code/new">
-                  Code <CodeIcon />
-                </Link>
-              </li>
             </ul>
+            <Box>
+              <Route exact path="/code/new">
+                <CreateCode />
+              </Route>
+            </Box>
           </nav>
 
           <Box
@@ -116,13 +122,16 @@ export function ApplicationRoutes() {
           </Box>
         </Box>
       )}
-      <Box sx={{ flex: 1, width: "100%" }}>
+      <Box sx={{ flex: 1, overflowY: "scroll" }}>
         <Switch>
           <Route exact path="/">
             <HomePage />
           </Route>
           <Route exact path="/code-of-conduct">
             <UserCodeOfConduct />
+          </Route>
+          <Route exact path="/code/new">
+            <Dashboard />
           </Route>
           <Route exact path="/dashboard">
             <Dashboard />

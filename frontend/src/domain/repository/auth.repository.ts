@@ -34,7 +34,7 @@ export class AuthRepository
       body: { username, password },
     });
 
-    const { data } = await this.requestHandler(
+    const { data } = await this.responseHandler(
       response,
       "Erro ao realizar o login"
     );

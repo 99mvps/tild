@@ -38,17 +38,14 @@ export function UserCodeOfConduct() {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Typography variant="body1">
-          <p>
-            Este Código de Conduta será aplicado para todos, enquanto
-            participantes desse espaço, para proteger o público de danos e
-            perigos morais. Nos dedicamos a promover um ambiente respeitoso e
-            livre de assédio para todos. Não toleramos quaisquer formas de
-            assédios ou intimidações de qualquer natureza seja com participantes
-            ou grupos. Imagens, atividades ou materiais de conteúdo sexual,
-            homofóbico, pejorativo e/ou discriminatório de qualquer natureza não
-            são aceitos.
-          </p>
+        <Typography variant="body1" component="p" sx={{ marginBottom: 3 }}>
+          Este Código de Conduta será aplicado para todos, enquanto
+          participantes desse espaço, para proteger o público de danos e perigos
+          morais. Nos dedicamos a promover um ambiente respeitoso e livre de
+          assédio para todos. Não toleramos quaisquer formas de assédios ou
+          intimidações de qualquer natureza seja com participantes ou grupos.
+          Imagens, atividades ou materiais de conteúdo sexual, homofóbico,
+          pejorativo e/ou discriminatório de qualquer natureza não são aceitos.
         </Typography>
       </Grid>
       <Grid item xs={12}>
@@ -72,9 +69,6 @@ export function UserCodeOfConduct() {
         </ul>
       </Grid>
       <Grid item xs={12}>
-        <Typography variant="body1"></Typography>
-      </Grid>
-      <Grid item xs={12}>
         <strong>
           Qualquer participante que violar tais regras pode ser convidado a se
           retirar. Se você for assediado, perceber que alguém está sendo
@@ -88,59 +82,48 @@ export function UserCodeOfConduct() {
         <Typography variant="h4">
           <span style={{ color: "crimson" }}>Porquê?</span>
         </Typography>
-        <Typography variant="body1">
-          <p>
-            Uma rede social é um ambiente virtual que conecta milhões de pessoas
-            ao redor do mundo, permitindo a troca de ideias, informações e
-            interações sociais. No entanto, dada a natureza aberta e diversa
-            dessas plataformas, torna-se necessário estabelecer um código de
-            conduta para garantir a segurança, a convivência saudável e o
-            respeito mútuo entre os usuários.
-          </p>
+        <Typography variant="body1" component="p" sx={{ marginBottom: 3 }}>
+          Uma rede social é um ambiente virtual que conecta milhões de pessoas
+          ao redor do mundo, permitindo a troca de ideias, informações e
+          interações sociais. No entanto, dada a natureza aberta e diversa
+          dessas plataformas, torna-se necessário estabelecer um código de
+          conduta para garantir a segurança, a convivência saudável e o respeito
+          mútuo entre os usuários.
         </Typography>
-        <Typography variant="body1">
-          <p>
-            Primeiramente, um código de conduta é fundamental para combater o
-            discurso de ódio, a discriminação e o assédio. Ao estabelecer
-            diretrizes claras sobre o que é aceitável ou não no ambiente
-            virtual, a rede social cria uma atmosfera segura para os usuários,
-            protegendo-os de conteúdos prejudiciais e promovendo a igualdade de
-            direitos.
-          </p>
+        <Typography variant="body1" component="p" sx={{ marginBottom: 3 }}>
+          Primeiramente, um código de conduta é fundamental para combater o
+          discurso de ódio, a discriminação e o assédio. Ao estabelecer
+          diretrizes claras sobre o que é aceitável ou não no ambiente virtual,
+          a rede social cria uma atmosfera segura para os usuários,
+          protegendo-os de conteúdos prejudiciais e promovendo a igualdade de
+          direitos.
         </Typography>
-        <Typography variant="body1">
-          <p>
-            O código de conduta também auxilia na promoção de uma cultura de
-            respeito e empatia online. Ao encorajar comportamentos positivos,
-            como a gentileza, a tolerância e a cooperação, a rede social
-            contribui para a construção de relacionamentos saudáveis e
-            enriquecedores entre os usuários, estimulando a criação de
-            comunidades virtuais mais positivas.
-          </p>
+        <Typography variant="body1" component="p" sx={{ marginBottom: 3 }}>
+          O código de conduta também auxilia na promoção de uma cultura de
+          respeito e empatia online. Ao encorajar comportamentos positivos, como
+          a gentileza, a tolerância e a cooperação, a rede social contribui para
+          a construção de relacionamentos saudáveis e enriquecedores entre os
+          usuários, estimulando a criação de comunidades virtuais mais
+          positivas.
         </Typography>
-        <Typography variant="body1">
-          <p>
-            Além disso, um código de conduta auxilia no cumprimento das leis
-            vigentes em nosso país, garantindo a defesa de direitos e valores
-            fundamentais. Ao estabelecer diretrizes claras em conformidade com a
-            legislação local, a rede social busca assegurar a proteção da
-            privacidade, a prevenção de crimes digitais, a promoção da igualdade
-            de gênero e a proibição de discursos discriminatórios. Dessa forma,
-            o código de conduta contribui para uma utilização responsável da
-            plataforma, protegendo tanto os usuários quanto a sociedade como um
-            todo, ao fortalecer o cumprimento das leis e a promoção de uma
-            internet mais segura e justa.
-          </p>
+        <Typography variant="body1" component="p" sx={{ marginBottom: 3 }}>
+          Além disso, um código de conduta auxilia no cumprimento das leis
+          vigentes em nosso país, garantindo a defesa de direitos e valores
+          fundamentais. Ao estabelecer diretrizes claras em conformidade com a
+          legislação local, a rede social busca assegurar a proteção da
+          privacidade, a prevenção de crimes digitais, a promoção da igualdade
+          de gênero e a proibição de discursos discriminatórios. Dessa forma, o
+          código de conduta contribui para uma utilização responsável da
+          plataforma, protegendo tanto os usuários quanto a sociedade como um
+          todo, ao fortalecer o cumprimento das leis e a promoção de uma
+          internet mais segura e justa.
         </Typography>
-        <Typography variant="body1">
-          <p>
-            Em suma, uma rede social necessita de um código de conduta para
-            assegurar um ambiente virtual seguro, inclusivo e respeitoso. Por
-            meio dessas diretrizes, é possível combater o discurso de ódio,
-            proteger a privacidade dos usuários, fomentar uma cultura de
-            respeito e empatia, e promover a confiabilidade das informações
-            compartilhadas.
-          </p>
+        <Typography variant="body1" component="p" sx={{ marginBottom: 3 }}>
+          Em suma, uma rede social necessita de um código de conduta para
+          assegurar um ambiente virtual seguro, inclusivo e respeitoso. Por meio
+          dessas diretrizes, é possível combater o discurso de ódio, proteger a
+          privacidade dos usuários, fomentar uma cultura de respeito e empatia,
+          e promover a confiabilidade das informações compartilhadas.
         </Typography>
         <strong>
           Esse código de conduta não se limita aos pontos aqui escritos ou

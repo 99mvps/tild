@@ -1,6 +1,7 @@
 import { ApiProperty, OmitType, PartialType } from "@nestjs/swagger";
 import { IsEnum, IsNotEmpty, MaxLength } from "class-validator";
 import { Langs } from "../code-editor.enum";
+import { User } from "src/users/user.entity";
 
 export class CodeEditorDTO {
   @ApiProperty({
@@ -36,6 +37,9 @@ export class CodeEditorDTO {
 
   @ApiProperty({ name: "deletedAt", description: "A data de deleção do tild." })
   deletedAt?: Date;
+
+  @ApiProperty({ name: "user", description: "O usuário." })
+  user: User;
 }
 
 export class FilterCodeEditorDTO extends PartialType(CodeEditorDTO) {}

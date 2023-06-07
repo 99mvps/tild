@@ -1,6 +1,8 @@
 import {
+  Inject,
   Injectable,
   InternalServerErrorException,
+  Scope,
   UnprocessableEntityException,
 } from "@nestjs/common";
 import { DeleteResult, Repository, UpdateResult } from "typeorm";
@@ -14,9 +16,12 @@ import {
 } from "./dto/code-editor.dto";
 import { IResourceResponse, ResourceResponse } from "src/app-response.http-filter";
 import { CodeEditor } from "./code-editor.entity";
+import { UsersDTO } from "src/users/dto/user.dto";
+import { REQUEST } from "@nestjs/core";
+import { Request } from "express";
 
 interface ICodeEditorService {
-  findAll(params: FilterCodeEditorDTO): Promise<IResourceResponse<CodeEditorDTO[]>>;
+  findAll(params: FilterCodeEditorDTO, user: UsersDTO): Promise<IResourceResponse<CodeEditorDTO[]>>;
   updateCodeEditor(
     codeEditorId: UUIDVersion,
     codeEditor: UpdateCodeEditorDTO
@@ -25,15 +30,16 @@ interface ICodeEditorService {
   getById(codeEditorId: UUIDVersion): Promise<IResourceResponse<CodeEditorDTO>>;
 }
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class CodeEditorService implements ICodeEditorService {
   constructor(
     @InjectRepository(CodeEditor)
-    private codeEditorRepository: Repository<CodeEditor>
+    private codeEditorRepository: Repository<CodeEditor>,
+    @Inject(REQUEST) private request: Request
   ) {}
 
   async findAll(params: FilterCodeEditorDTO) {
-    const codeEditors = await this.codeEditorRepository
+    const codeEditors = this.codeEditorRepository
       .createQueryBuilder("code_editor")
       .select([
         "code_editor.id",
@@ -43,13 +49,16 @@ export class CodeEditorService implements ICodeEditorService {
         "code_editor.createdAt",
         "code_editor.updatedAt",
       ])
-      .where(params)
-      .getMany();
+      .where(params);
+
+    if (this.request.user) {
+      codeEditors.andWhere({ user: this.request.user.userId });
+    }
 
     return {
       code: "CODE_EDITOR_LIST",
       message: "A lista de tilds.",
-      data: codeEditors,
+      data: await codeEditors.getMany(),
     };
   }
 
@@ -66,6 +75,8 @@ export class CodeEditorService implements ICodeEditorService {
       where: {
         id: String(codeEditorId),
       },
+      relationLoadStrategy: "join",
+      relations: ["user"],
     });
 
     return new ResourceResponse<CodeEditorDTO>({

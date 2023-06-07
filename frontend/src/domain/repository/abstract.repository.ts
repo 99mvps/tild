@@ -57,7 +57,7 @@ export abstract class AbstractRepository {
     }
   }
 
-  async requestHandler(response: Response, errorMessage: string) {
+  async responseHandler(response: Response, errorMessage: string) {
     const result = await response.json();
 
     if (!response.ok) {

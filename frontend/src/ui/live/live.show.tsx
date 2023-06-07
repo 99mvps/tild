@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Button, Grid } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import { useCases } from "context/use-cases";
 import { CodeEditorDTO } from "ui/code-editor/code-editor.interfaces";
 import { format } from "date-fns";
@@ -77,23 +77,30 @@ export function LiveShow(): JSX.Element {
   return (
     <Grid
       container
-      style={{
-        margin: 100,
+      sx={{
         display: "flex",
-        flexDirection: "row",
-        flexWrap: "wrap",
-        padding: 20,
+        backgroundColor: "white",
       }}
     >
-      <h3 className="form-title">Live</h3>
-      <h5 className="form-title">{codeEditor.title}</h5>
-      <h5 className="form-title">{codeEditor.lang}</h5>
-      <h5 className="form-title">
-        {format(codeEditor.createdAt, "dd/MM/yyyy")}
-      </h5>
-      <h5 className="form-title">
-        Participants: {liveDataModel.participants.count}
-      </h5>
+      <Grid item xs={12}>
+        <Typography variant="h3">Live</Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography variant="h5">{codeEditor.title}</Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography variant="h5">{codeEditor.lang}</Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography variant="h5">
+          {JSON.stringify(codeEditor.createdAt)}
+        </Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography variant="h5">
+          Participants: {liveDataModel.participants.count}
+        </Typography>
+      </Grid>
     </Grid>
   );
 }

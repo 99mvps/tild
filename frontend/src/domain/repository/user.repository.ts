@@ -45,7 +45,7 @@ export class UserRepository
       body: user,
     });
 
-    const { data } = await this.requestHandler(
+    const { data } = await this.responseHandler(
       response,
       "Erro ao criar o usuário"
     );
@@ -65,7 +65,7 @@ export class UserRepository
       body: user,
     });
 
-    const { data } = await this.requestHandler(
+    const { data } = await this.responseHandler(
       response,
       "Erro ao editar o usuário"
     );
@@ -84,7 +84,7 @@ export class UserRepository
       url: this.apiEndpoint.concat(`/${id}`),
     });
 
-    const { data } = await this.requestHandler(
+    const { data } = await this.responseHandler(
       response,
       "Erro ao remover o usuário"
     );
@@ -104,7 +104,7 @@ export class UserRepository
       url: this.apiEndpoint,
     });
 
-    const { data } = await this.requestHandler(
+    const { data } = await this.responseHandler(
       response,
       "Erro ao buscar o usuário"
     );
@@ -122,7 +122,7 @@ export class UserRepository
       url: this.apiEndpoint.concat(`/${id}`),
     });
 
-    const { data } = await this.requestHandler(
+    const { data } = await this.responseHandler(
       response,
       "Erro ao buscar o usuário"
     );
