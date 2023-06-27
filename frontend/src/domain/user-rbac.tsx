@@ -8,7 +8,7 @@ import React, { useEffect } from "react";
 import { useAuth } from "context/use-auth";
 import { Location } from "history";
 
-function AuthVerify() {
+function RoleBasedAccess(): JSX.Element | null {
   const auth = useAuth();
   const history = useHistory();
   const userToken = auth.getUserToken();
@@ -29,13 +29,13 @@ function AuthVerify() {
         auth.signout();
       }
     }
-  }, [location.pathname, userToken, auth, history]);
+  }, [auth, userToken, location.pathname, history]);
 
   if (!userPermission?.allowed) {
     return <Redirect to={userPermission.redirectTo} />;
   }
 
-  return <></>;
+  return null;
 }
 
-export const AuthVerifier = withRouter(AuthVerify);
+export const UserRBACRouterController = withRouter(RoleBasedAccess);

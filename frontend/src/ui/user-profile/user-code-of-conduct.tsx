@@ -74,8 +74,8 @@ export function UserCodeOfConduct() {
           retirar. Se você for assediado, perceber que alguém está sendo
           assediado, ou tem outras preocupações, entre em contato com as
           autoridades compententes e/ ou nos procure através do email:{" "}
-          <a href="mailto:tild+denuncia@99mvps.dev">tild+denuncia@99mvps.dev</a>{" "}
-          para auxílio em qualquer investigação necessária.
+          <a href="mailto:tild@99mvps.dev">tild@99mvps.dev</a> para auxílio em
+          qualquer investigação necessária.
         </strong>
       </Grid>
       <Grid item xs={12} sx={{ marginTop: 8 }}>
@@ -127,7 +127,7 @@ export function UserCodeOfConduct() {
         </Typography>
         <strong>
           Esse código de conduta não se limita aos pontos aqui escritos ou
-          abordados, como também segue e seguirá qualquer lei em virgor no país
+          abordados, como também segue e seguirá qualquer lei em vigor no país
           que tratem de tais assuntos.
         </strong>
       </Grid>

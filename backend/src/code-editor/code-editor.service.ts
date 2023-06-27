@@ -1,8 +1,6 @@
 import {
-  Inject,
   Injectable,
   InternalServerErrorException,
-  Scope,
   UnprocessableEntityException,
 } from "@nestjs/common";
 import { DeleteResult, Repository, UpdateResult } from "typeorm";
@@ -16,12 +14,13 @@ import {
 } from "./dto/code-editor.dto";
 import { IResourceResponse, ResourceResponse } from "src/app-response.http-filter";
 import { CodeEditor } from "./code-editor.entity";
-import { UsersDTO } from "src/users/dto/user.dto";
-import { REQUEST } from "@nestjs/core";
-import { Request } from "express";
+import { LoggedUserRequestDTO } from "src/auth/dto/auth.dto";
 
 interface ICodeEditorService {
-  findAll(params: FilterCodeEditorDTO, user: UsersDTO): Promise<IResourceResponse<CodeEditorDTO[]>>;
+  findAll(
+    params: FilterCodeEditorDTO,
+    user: LoggedUserRequestDTO
+  ): Promise<IResourceResponse<CodeEditorDTO[]>>;
   updateCodeEditor(
     codeEditorId: UUIDVersion,
     codeEditor: UpdateCodeEditorDTO
@@ -30,15 +29,14 @@ interface ICodeEditorService {
   getById(codeEditorId: UUIDVersion): Promise<IResourceResponse<CodeEditorDTO>>;
 }
 
-@Injectable({ scope: Scope.REQUEST })
+@Injectable()
 export class CodeEditorService implements ICodeEditorService {
   constructor(
     @InjectRepository(CodeEditor)
-    private codeEditorRepository: Repository<CodeEditor>,
-    @Inject(REQUEST) private request: Request
+    private codeEditorRepository: Repository<CodeEditor>
   ) {}
 
-  async findAll(params: FilterCodeEditorDTO) {
+  async findAll(params: FilterCodeEditorDTO, user: LoggedUserRequestDTO) {
     const codeEditors = this.codeEditorRepository
       .createQueryBuilder("code_editor")
       .select([
@@ -51,8 +49,8 @@ export class CodeEditorService implements ICodeEditorService {
       ])
       .where(params);
 
-    if (this.request.user) {
-      codeEditors.andWhere({ user: this.request.user.userId });
+    if (user) {
+      codeEditors.andWhere({ user: user.userId });
     }
 
     return {
@@ -62,7 +60,7 @@ export class CodeEditorService implements ICodeEditorService {
     };
   }
 
-  async find(codeEditor: UUIDVersion): Promise<CodeEditor | null> {
+  async find(codeEditor: UUIDVersion) {
     return this.codeEditorRepository.findOne({
       where: {
         id: codeEditor as string,

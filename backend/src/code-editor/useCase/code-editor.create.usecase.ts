@@ -1,31 +1,31 @@
-import { Inject, Injectable, InternalServerErrorException, Scope } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { CodeEditor } from "../code-editor.entity";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { IResourceResponse, ResourceResponse } from "src/app-response.http-filter";
 import { CodeEditorDTO, CreateCodeEditorDTO } from "../dto/code-editor.dto";
-
-import { REQUEST } from "@nestjs/core";
-import { Request } from "express";
+import { LoggedUserRequestDTO } from "src/auth/dto/auth.dto";
 
 export interface ICodeEditorCreateUseCase {
-  execute(codeEditor: CreateCodeEditorDTO): Promise<IResourceResponse<CodeEditorDTO>>;
+  execute(
+    codeEditor: CreateCodeEditorDTO,
+    user: LoggedUserRequestDTO
+  ): Promise<IResourceResponse<CodeEditorDTO>>;
 }
 
-@Injectable({ scope: Scope.REQUEST })
+@Injectable()
 export class CodeEditorCreateUseCase implements ICodeEditorCreateUseCase {
   constructor(
     @InjectRepository(CodeEditor)
-    private codeEditorsRepository: Repository<CodeEditor>,
-    @Inject(REQUEST) private request: Request
+    private codeEditorsRepository: Repository<CodeEditor>
   ) {}
 
-  async execute(codeEditor: CreateCodeEditorDTO) {
+  async execute(codeEditor: CreateCodeEditorDTO, user: LoggedUserRequestDTO) {
     try {
       const codeEditorEntity = this.codeEditorsRepository.create({
         ...codeEditor,
         user: {
-          id: this.request.user.userId,
+          id: user.userId,
         },
       });
 

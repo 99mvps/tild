@@ -1,4 +1,4 @@
-import { Logger, Module, Scope } from "@nestjs/common";
+import { Module, Scope } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule } from "@nestjs/config";
 import { setEnvironment } from "./env";

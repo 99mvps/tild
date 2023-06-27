@@ -1,18 +1,18 @@
 import { atom, selector } from "recoil";
 
-export const tildApplicationState = atom({
+export const applicationState = atom({
   key: "appState",
   default: {
-    isLive: false,
+    live: false,
   },
 });
 
-export const isLiveSelector = selector({
-  key: "isLive",
-  get: ({ get }) => get(tildApplicationState).isLive,
+export const liveSelector = selector({
+  key: "live",
+  get: ({ get }) => get(applicationState).live,
   set: ({ set, get }) =>
-    set(tildApplicationState, (prevState) => ({
+    set(applicationState, (prevState) => ({
       ...prevState,
-      isLive: !get(tildApplicationState).isLive,
+      live: !get(applicationState).live,
     })),
 });

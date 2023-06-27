@@ -41,3 +41,14 @@ export class BearerTokenDTO {
   })
   accessToken: string;
 }
+
+export class LoggedUserRequestDTO {
+  userId: string;
+  userEmail: string;
+  userName: string;
+  userRole: string;
+  userProfileImage: string | null;
+  userPermissions: Record<string, unknown>;
+  iat: EpochTimeStamp;
+  exp: EpochTimeStamp;
+}

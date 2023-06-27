@@ -1,6 +1,6 @@
-import { Grid } from "@mui/material";
 import React from "react";
-import { CustomCard } from "ui/components/card/code-editor";
+import { Grid } from "@mui/material";
+import { CodeComponent } from "ui/components/svg-component/code-component";
 
 export function HomeList() {
   return (
@@ -12,8 +12,8 @@ export function HomeList() {
       spacing={1}
     >
       <Grid item xs={12} md={6} lg={2}>
-        <CustomCard
-          codeEditor={{
+        <CodeComponent
+          {...{
             id: "a",
             lang: "js",
             live: true,
@@ -23,8 +23,8 @@ export function HomeList() {
         />
       </Grid>
       <Grid item xs={12} md={6} lg={2}>
-        <CustomCard
-          codeEditor={{
+        <CodeComponent
+          {...{
             id: "a",
             lang: "js",
             live: true,
@@ -34,8 +34,8 @@ export function HomeList() {
         />
       </Grid>
       <Grid item xs={12} md={6} lg={2}>
-        <CustomCard
-          codeEditor={{
+        <CodeComponent
+          {...{
             id: "a",
             lang: "js",
             live: true,
@@ -45,8 +45,8 @@ export function HomeList() {
         />
       </Grid>
       <Grid item xs={12} md={6} lg={2}>
-        <CustomCard
-          codeEditor={{
+        <CodeComponent
+          {...{
             id: "a",
             lang: "js",
             live: true,
@@ -56,8 +56,8 @@ export function HomeList() {
         />
       </Grid>
       <Grid item xs={12} md={6} lg={2}>
-        <CustomCard
-          codeEditor={{
+        <CodeComponent
+          {...{
             id: "a",
             lang: "js",
             live: true,
@@ -67,8 +67,8 @@ export function HomeList() {
         />
       </Grid>
       <Grid item xs={12} md={6} lg={2}>
-        <CustomCard
-          codeEditor={{
+        <CodeComponent
+          {...{
             id: "a",
             lang: "js",
             live: true,
@@ -78,8 +78,8 @@ export function HomeList() {
         />
       </Grid>
       <Grid item xs={12} md={6} lg={2}>
-        <CustomCard
-          codeEditor={{
+        <CodeComponent
+          {...{
             id: "a",
             lang: "js",
             live: true,

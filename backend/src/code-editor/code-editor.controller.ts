@@ -7,7 +7,6 @@ import {
   Patch,
   Post,
   Query,
-  Req,
   UseGuards,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
@@ -30,6 +29,8 @@ import {
   UpdateCodeEditorApiDoc,
   GetCodeEditorApiDoc,
 } from "./code-editor.swagger.api-doc";
+import { LoggedUserRequest } from "src/auth/decorators/requester-user";
+import { LoggedUserRequestDTO } from "src/auth/dto/auth.dto";
 
 @ApiTags("code-editor")
 @Controller("code-editor")
@@ -42,16 +43,20 @@ export class CodeEditorController {
 
   @Post()
   @CreateCodeEditorApiDoc()
-  async create(@Body() codeEditor: CreateCodeEditorDTO): Promise<IResourceResponse<CodeEditorDTO>> {
-    return this.createCodeEditor.execute(codeEditor);
+  async create(
+    @Body() codeEditor: CreateCodeEditorDTO,
+    @LoggedUserRequest() user: LoggedUserRequestDTO
+  ): Promise<IResourceResponse<CodeEditorDTO>> {
+    return this.createCodeEditor.execute(codeEditor, user);
   }
 
   @Get()
   @GetAllCodeEditorsApiDoc()
   async getAllCodeEditor(
-    @Query() queryFilter: FilterCodeEditorDTO
+    @Query() queryFilter: FilterCodeEditorDTO,
+    @LoggedUserRequest() user: LoggedUserRequestDTO
   ): Promise<IResourceResponse<CodeEditorDTO[]>> {
-    return this.codeEditorService.findAll(queryFilter);
+    return this.codeEditorService.findAll(queryFilter, user);
   }
 
   @Get(":id")
