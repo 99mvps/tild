@@ -101,9 +101,8 @@ export class CreateUserDTO extends PartialType(
   @MinLength(6, {
     message: "A senha precisa ter pelo menos 6 caracteres.",
   })
-  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-    message:
-      "Senha muito fraca. Obrigatório uma letra maiúscula, uma minúsucula, um número e um caracter especial.",
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d).*$/, {
+    message: "Senha muito fraca. Coloca pelo menos uma letra e um número.",
   })
   password: string;
 }

@@ -40,18 +40,15 @@ export class Permission {
   }
 
   public checkPermission(role = UserRoles.USER, path: string): UserPermission {
-    return {
-      allowed: true,
-      redirectTo: this.rootPath,
-    };
-    // if (path === this.rootPath) {
-    //   return {
-    //     allowed: true,
-    //     redirectTo: this.rootPath,
-    //   };
-    // }
-    // const userPermission = this.getUserPermission(role);
+    if (path === this.rootPath) {
+      return {
+        allowed: true,
+        redirectTo: this.rootPath,
+      };
+    }
 
-    // return userPermission(path);
+    const userPermission = this.getUserPermission(role);
+
+    return userPermission(path);
   }
 }

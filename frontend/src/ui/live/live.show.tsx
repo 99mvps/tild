@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { Button, Grid, Typography } from "@mui/material";
+import { useParams } from "react-router-dom";
+import { Grid,  Typography } from "@mui/material";
 import { useCases } from "context/use-cases";
 import { CodeEditorDTO } from "ui/code-editor/code-editor.interfaces";
-import { format } from "date-fns";
 import { useRecoilValue } from "recoil";
 import {
   LiveShowStateType,
@@ -11,6 +10,7 @@ import {
 } from "domain/state/live-show.recoil";
 import { TErrorMessage } from "ui/components/error";
 import { toast } from "react-toastify";
+import EmptyLive from "../code-editor/components/empty-list.show";
 
 /**
  * The `"/path/:id"` param is a param that matches on the route and is treated as a value that needs to be fetched
@@ -51,27 +51,7 @@ export function LiveShow(): JSX.Element {
   }, [id, loadCodeEditor]);
 
   if (!id) {
-    return (
-      <Grid
-        container
-        style={{
-          marginTop: 30,
-          marginLeft: 30,
-          display: "flex",
-          flexDirection: "row",
-          flexWrap: "wrap",
-          padding: 20,
-        }}
-      >
-        <Grid style={{ backgroundColor: "white", width: "800px" }}>
-          <p>Ainda não criou nenhum tild?</p>
-
-          <Link to="/code/new">
-            <Button variant="contained">Comece agora mesmo!</Button>
-          </Link>
-        </Grid>
-      </Grid>
-    );
+    return <EmptyLive />;
   }
 
   return (

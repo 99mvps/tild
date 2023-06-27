@@ -1,8 +1,8 @@
+import React from "react";
 import { Podcasts } from "@mui/icons-material";
 import { Box } from "@mui/material";
 import { format } from "date-fns";
-import { isLiveSelector } from "domain/state/general-application.recoil";
-import React from "react";
+import { liveSelector } from "domain/state/general-application.recoil";
 import { useRecoilValue } from "recoil";
 
 export function CodeComponent({
@@ -16,7 +16,7 @@ export function CodeComponent({
   createdAt: Date;
   live: boolean;
 }) {
-  const isOnline = useRecoilValue(isLiveSelector);
+  const isOnline = useRecoilValue(liveSelector);
 
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>

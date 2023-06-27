@@ -7,6 +7,8 @@ import { createBrowserHistory } from "history";
 import { AuthProvider } from "context/use-auth";
 import { UseCasesProvider } from "context/use-cases";
 
+import "./root.css";
+
 const history = createBrowserHistory();
 
 export function Root() {

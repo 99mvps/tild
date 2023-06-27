@@ -5,9 +5,14 @@ import { Link, useHistory, useLocation } from "react-router-dom";
 import { useAuth } from "context/use-auth";
 import { TextField, Button, Typography, Box, IconButton } from "@mui/material";
 
-import { AccountCircle, AddBox, ArrowBack } from "@mui/icons-material";
+import {
+  MailLock,
+  AccountCircle,
+  AddBox,
+  ArrowBack,
+} from "@mui/icons-material";
 import { usePasswordVisibility } from "ui/components/inputs/password-visibility.component";
-export function LoginRoute(): JSX.Element {
+export function UserLogin(): JSX.Element {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -67,12 +72,12 @@ export function LoginRoute(): JSX.Element {
               id="username"
               label="Email"
               fullWidth
-              placeholder="Username"
+              placeholder="email"
               type="text"
               name="username"
               onChange={(e) => setEmail(e.target.value)}
               InputProps={{
-                startAdornment: <AccountCircle sx={{ marginRight: 2 }} />,
+                startAdornment: <MailLock sx={{ marginRight: 2 }} />,
               }}
             />
           </Box>
@@ -80,8 +85,8 @@ export function LoginRoute(): JSX.Element {
             <TextField
               fullWidth
               id="password"
-              label="Password"
-              placeholder="Password"
+              label="senha"
+              placeholder="senha"
               type={passAdornVisible ? "text" : "password"}
               name="password"
               onChange={(e) => setPassword(e.target.value)}

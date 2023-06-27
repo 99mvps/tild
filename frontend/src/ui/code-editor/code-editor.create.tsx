@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import {
   TextField,
@@ -11,8 +11,8 @@ import { TErrorMessage } from "ui/components/error";
 import { SuccessMessage, TSuccessMessageProps } from "ui/components/success";
 import { useCases } from "context/use-cases";
 import { CodeEditorEnabledLanguages } from "./code-editor.enum";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { isLiveSelector } from "domain/state/general-application.recoil";
+import { useSetRecoilState } from "recoil";
+import { liveSelector } from "domain/state/general-application.recoil";
 import { CreateCodeEditorDTO } from "./code-editor.interfaces";
 import { codeEditorLangsDropDownList } from "./code-editor.mapper";
 import { toast } from "react-toastify";
@@ -26,7 +26,7 @@ import { Close, Start } from "@mui/icons-material";
  * Users form creation
  * @returns {JSX.Element}
  */
-export function CreateCode(): JSX.Element {
+export function CreateCodeEditor(): JSX.Element {
   const {
     CodeEditorUseCases: { create },
   } = useCases();
@@ -46,19 +46,12 @@ export function CreateCode(): JSX.Element {
   const [formInputErrors, setFormInputErrors] =
     useState<CreateCodeEditorDTO>(initialFormState);
   const [success, setSuccess] = useState<TSuccessMessageProps>();
-  const setTildLive = useSetRecoilState(isLiveSelector);
-  const isOnline = useRecoilState(isLiveSelector);
+  const setTildLive = useSetRecoilState(liveSelector);
 
   const reset = () => {
     setSuccess(undefined);
     setFormInput(initialFormState);
     setFormInputErrors(initialFormState);
-  };
-
-  useEffect(() => {}, [formInput]);
-
-  const toggleOnlineStatus = () => {
-    setTildLive(!isOnline);
   };
 
   const handleChange = (event: any) => {
@@ -69,20 +62,17 @@ export function CreateCode(): JSX.Element {
   };
 
   const handleSubmit = () => {
-    console.log({ formInput });
     create(formInput, {
-      onSuccess: (codeEditor) => {
-        console.log("code-editor-create", { codeEditor });
+      onSuccess: (codeEditor) =>
         setSuccess({
           message: "🎉 Uhul! Vamos lá! 🎉",
           duration: 1000,
           handlerOnClose: () => {
             reset();
-            toggleOnlineStatus();
+            setTildLive(true);
             history.push(`/live/${codeEditor.id}`);
           },
-        });
-      },
+        }),
       onError: ({ title, errors }: TErrorMessage) => {
         if (title === "ValidationError") {
           setFormInputErrors({
@@ -99,11 +89,15 @@ export function CreateCode(): JSX.Element {
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        padding: ".5rem 1.5rem",
+      }}
+    >
       {success && <SuccessMessage {...success} />}
       <TextField
         id="title"
-        label="tild name"
+        label="tild"
         value={formInput.title}
         type="text"
         name="title"
@@ -129,7 +123,7 @@ export function CreateCode(): JSX.Element {
             <TextField
               {...params}
               style={!!formInputErrors.lang ? { borderColor: "red" } : {}}
-              label="Linguagem"
+              label="lang"
               name="lang"
               value={formInput.lang}
             />
@@ -170,6 +164,6 @@ export function CreateCode(): JSX.Element {
           <Start />
         </Button>
       </Box>
-    </>
+    </Box>
   );
 }
