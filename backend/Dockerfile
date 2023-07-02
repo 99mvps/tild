@@ -12,5 +12,5 @@ FROM node:18-alpine
 WORKDIR /home/backend
 COPY --from=builder /home/backend ./
 EXPOSE 3001
-RUN npm run migration:run
+
 CMD ["npm", "run", "start:dev"]
