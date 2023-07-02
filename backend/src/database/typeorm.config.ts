@@ -3,6 +3,8 @@ import { User } from "src/users/user.entity";
 import { DataSourceOptions } from "typeorm";
 import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
 
+console.log("process.env", process.env);
+
 export default {
   type: process.env.DATABASE_TYPE as PostgresConnectionOptions["type"],
   host: process.env.DATABASE_HOST,
