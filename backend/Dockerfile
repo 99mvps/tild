@@ -5,6 +5,7 @@ COPY . ./
 
 RUN npm install
 RUN npm run build
+RUN npm run migration:run
 
 
 # Second Stage : Setup command to run your app using lightweight node image
@@ -13,4 +14,4 @@ WORKDIR /home/backend
 COPY --from=builder /home/backend ./
 EXPOSE 3001
 
-ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["npm", "run", "start"]
