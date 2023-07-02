@@ -1,11 +1,8 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
-import * as bcrypt from "bcrypt";
 export class MigrationIndexZeroUser1684548100898 implements MigrationInterface {
   name = "MigrationIndexZeroUser1684548100898";
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    const hashedPassword = await bcrypt.hash("5 Caxorrros fumandO", 1_0);
-
     await queryRunner.query(`
           insert into users 
           (
@@ -22,7 +19,7 @@ export class MigrationIndexZeroUser1684548100898 implements MigrationInterface {
             'Index Zero',
             'root@99mvps.dev',
             'admin',
-            '${hashedPassword}',
+            '$2y$10$JX6CL.Al0mdKOq3HSaq4Dud3/RxEqNJDEsfC72LgPD1cwCiv1bag2',
             '2023-02-23 11:27:55.87583',
             '2023-02-23 11:27:55.87583'
           );
@@ -44,7 +41,7 @@ export class MigrationIndexZeroUser1684548100898 implements MigrationInterface {
           'Index One',
           'root+one@99mvps.dev',
           'streamer',
-          '${hashedPassword}',
+          '$2y$10$JX6CL.Al0mdKOq3HSaq4Dud3/RxEqNJDEsfC72LgPD1cwCiv1bag2',
           '2023-02-23 11:27:55.87583',
           '2023-02-23 11:27:55.87583'
         );
@@ -65,7 +62,7 @@ export class MigrationIndexZeroUser1684548100898 implements MigrationInterface {
         'Index Two',
         'root+two@99mvps.dev',
         'user',
-        '${hashedPassword}',
+        '$2y$10$JX6CL.Al0mdKOq3HSaq4Dud3/RxEqNJDEsfC72LgPD1cwCiv1bag2',
         '2023-02-23 11:27:55.87583',
         '2023-02-23 11:27:55.87583'
       );
@@ -87,7 +84,7 @@ export class MigrationIndexZeroUser1684548100898 implements MigrationInterface {
       'Index Three',
       'root+three@99mvps.dev',
       'user',
-      '${hashedPassword}',
+      '$2y$10$JX6CL.Al0mdKOq3HSaq4Dud3/RxEqNJDEsfC72LgPD1cwCiv1bag2',
       '2023-02-23 11:27:55.87583',
       '2023-02-23 11:27:55.87583'
     );

@@ -14,7 +14,7 @@
 
 ```bash
   ❯ cd backend
-  ❯ .bin/npm-run.sh migration:run
+  ❯ ./npm-run.sh migration:run
 ```
 
 ## Database
@@ -36,7 +36,7 @@
 - Running the migrations.
 
 ```bash
-  ❯ .bin/npm-run.sh migration:run
+  ❯ ./npm-run.sh migration:run
 ```
 
 ### Development
@@ -44,7 +44,7 @@
 - To generate migrations based on the application Entities, run the following command after defining the entire entity.
 
 ```bash
-  ❯ .bin/npm-run.sh migration:generate --name=<migration_name>
+  ❯ ./npm-run.sh migration:generate --name=<migration_name>
 ```
 
 ## Helpers
@@ -52,12 +52,12 @@
 - This project includes a script for running `npm` commands inside the backend container, where the first argument is the `npm` command to be executed, and the second parameter is additional arguments for the command.
 
 ```bash
-  ❯ .bin/npm-run.sh <npm run commands> $1 $2
+  ❯ ./npm-run.sh <npm run commands> $1 $2
 ```
 
 - Input:
 
-> `.bin/npm-run.sh migration:generate --name=User`
+> `./npm-run.sh migration:generate --name=User`
 
 - Output:
 
@@ -70,7 +70,7 @@
 ```
 
 ```bash
-  ❯ .bin/npm-run.sh my_own_command`
+  ❯ ./npm-run.sh my_own_command`
 ```
 
 - You could use the `cross-vars` variables as `$npm_config_name`.
