@@ -10,9 +10,9 @@ import {
 import { TErrorMessage } from "ui/components/error";
 import { SuccessMessage, TSuccessMessageProps } from "ui/components/success";
 import { useCases } from "context/use-cases";
-import { CodeEditorEnabledLanguages } from "./code-editor.enum";
+import { CodeEditorEnabledLanguages } from "./code-editor.languages";
 import { useSetRecoilState } from "recoil";
-import { liveSelector } from "domain/state/general-application.recoil";
+import { applicationState } from "domain/state/general-application.recoil";
 import { CreateCodeEditorDTO } from "./code-editor.interfaces";
 import { codeEditorLangsDropDownList } from "./code-editor.mapper";
 import { toast } from "react-toastify";
@@ -46,7 +46,8 @@ export function CreateCodeEditor(): JSX.Element {
   const [formInputErrors, setFormInputErrors] =
     useState<CreateCodeEditorDTO>(initialFormState);
   const [success, setSuccess] = useState<TSuccessMessageProps>();
-  const setTildLive = useSetRecoilState(liveSelector);
+
+  const appState = useSetRecoilState(applicationState);
 
   const reset = () => {
     setSuccess(undefined);
@@ -68,8 +69,11 @@ export function CreateCodeEditor(): JSX.Element {
           message: "🎉 Uhul! Vamos lá! 🎉",
           duration: 1000,
           handlerOnClose: () => {
+            appState({
+              tildId: codeEditor.id,
+              live: false,
+            });
             reset();
-            setTildLive(true);
             history.push(`/live/${codeEditor.id}`);
           },
         }),

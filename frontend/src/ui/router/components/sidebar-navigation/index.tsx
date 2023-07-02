@@ -13,11 +13,17 @@ import logo from "../../../assets/logo.png";
 import { BigHead } from "@bigheads/core";
 import NoteAddIcon from "@mui/icons-material/NoteAdd";
 import { Link as RouterLink } from "react-router-dom";
-import { liveSelector } from "domain/state/general-application.recoil";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { useCases } from "context/use-cases";
+import { applicationState } from "domain/state/general-application.recoil";
+import { toast } from "react-toastify";
+import { TErrorMessage } from "ui/components/error";
 
 export function SidebarNavigation(): JSX.Element | null {
   let auth = useAuth();
+  const {
+    CodeEditorUseCases: { update },
+  } = useCases();
 
   const LinkStyle = {
     display: "flex",
@@ -34,14 +40,30 @@ export function SidebarNavigation(): JSX.Element | null {
 
   const [activePath, setActivePath] = useState<string>("/");
 
-  const [isChecked, setIsChecked] = useState(false);
+  const setAppState = useSetRecoilState(applicationState);
 
-  const [online] = useRecoilState(liveSelector);
+  const [{ live, tildId }] = useRecoilState(applicationState);
 
   const shouldShowSidebarMenu = (path: string) =>
     !["/", "/code-of-conduct"].includes(path);
 
-  const handleSwitchChange = () => setIsChecked(!isChecked);
+  const handleSwitchChange = () => {
+    setAppState({
+      live: !live,
+      tildId,
+    });
+
+    update(
+      tildId,
+      {
+        live: !live,
+      },
+      {
+        onError: ({ title, errors }: TErrorMessage) =>
+          toast.error(`${title}: ${errors}`),
+      }
+    );
+  };
 
   const setLinkActive = (path: string) =>
     activePath.startsWith(path) && activePath !== "/settings"
@@ -89,7 +111,9 @@ export function SidebarNavigation(): JSX.Element | null {
           marginBottom: "2rem",
         }}
       >
-        <img src={logo} alt="what'd you learn today?" />
+        <Link to="/">
+          <img src={logo} alt="what'd you learn today?" />
+        </Link>
       </Box>
       <Button
         variant="contained"
@@ -136,13 +160,13 @@ export function SidebarNavigation(): JSX.Element | null {
                 Dashboard <DashboardCustomize />
               </Link>
             </li>
-            {auth.user && location.pathname.startsWith("/live") ? (
+            {live || (auth.user && location.pathname.startsWith("/live")) ? (
               <li color={"success"}>
                 <Link
                   style={{ ...LinkStyle, ...setLinkActive("/live") }}
-                  to="/live"
+                  to={!live ? "/live" : `/live/${tildId}`}
                 >
-                  Live <LiveTvicon color={"success"} />
+                  Live <LiveTvicon color={live ? "success" : "error"} />
                 </Link>
                 <Box
                   display="flex"
@@ -154,13 +178,13 @@ export function SidebarNavigation(): JSX.Element | null {
                       marginLeft: "2.5rem",
                     }}
                   >
-                    {online ? "Online" : "Offline"}
+                    {live ? "Online" : "Offline"}
                   </Box>
                   <Switch
                     sx={{
                       marginRight: ".5rem",
                     }}
-                    checked={online}
+                    checked={live}
                     onChange={handleSwitchChange}
                     color="success"
                   />

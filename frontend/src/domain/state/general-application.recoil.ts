@@ -1,9 +1,15 @@
-import { atom, selector } from "recoil";
+import { DefaultValue, atom, selector } from "recoil";
 
-export const applicationState = atom({
+export interface ApplicationStateInterface {
+  live: boolean;
+  tildId: string;
+}
+
+export const applicationState = atom<ApplicationStateInterface>({
   key: "appState",
   default: {
     live: false,
+    tildId: "EMPTY_ID",
   },
 });
 
@@ -15,4 +21,13 @@ export const liveSelector = selector({
       ...prevState,
       live: !get(applicationState).live,
     })),
+});
+
+export const tildIdLiveSelector = selector({
+  key: "tildId",
+  get: ({ get }) => get(applicationState).tildId,
+  set: ({ set, get }, newValue) => {
+    if (newValue instanceof DefaultValue) return;
+    set(applicationState, { ...get(applicationState), tildId: newValue });
+  },
 });

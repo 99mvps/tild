@@ -6,18 +6,20 @@ import { CardWallet } from "./components/wallet.card";
 import { useCases } from "context/use-cases";
 import { TErrorMessage } from "ui/components/error";
 import { CodeEditorDTO } from "ui/code-editor/code-editor.interfaces";
-import { Link as LinkRouter } from "react-router-dom";
+import { Link as LinkRouter, useHistory } from "react-router-dom";
 
 import { PaginatedDataTableComponent } from "ui/components/data-tables/data-table.component";
 import Tooltip from "@mui/material/Tooltip";
 import { format } from "date-fns";
 import EmptyCodeEditorList from "ui/code-editor/components/empty-list.show";
-import { DeleteForever, EditAttributes, LiveTv } from "@mui/icons-material";
+import { DeleteForever } from "@mui/icons-material";
 
 export function Dashboard() {
   const {
     CodeEditorUseCases: { loadAll },
   } = useCases();
+
+  const history = useHistory();
 
   const [codeEditors, setCodeEditors] = useState<CodeEditorDTO[]>([]);
 
@@ -33,6 +35,10 @@ export function Dashboard() {
       ),
     [loadAll]
   );
+
+  const manageCodeEditor = (codeEditorId: string) => {
+    history.push(`/live/${codeEditorId}`);
+  };
 
   useEffect(() => {
     loadCodeEditors();
@@ -80,7 +86,16 @@ export function Dashboard() {
           ]}
           tableData={codeEditors}
           tableRow={(row, index: number) => (
-            <TableRow key={index}>
+            <TableRow
+              key={index}
+              sx={{
+                cursor: "pointer",
+                "&:hover": {
+                  backgroundColor: "lightgrey",
+                },
+              }}
+              onClick={() => manageCodeEditor(row.id)}
+            >
               <TableCell>{row.title}</TableCell>
               <TableCell>{row.lang}</TableCell>
               <TableCell>{row.live ? "online" : "offline"}</TableCell>
@@ -88,35 +103,6 @@ export function Dashboard() {
                 {format(new Date(row.createdAt), "dd/MM/yyyy k:mm:ss")}
               </TableCell>
               <TableCell sx={{ display: "flex", gap: "0.9rem" }}>
-                <Tooltip title="gerenciar live" arrow>
-                  <IconButton
-                    component={LinkRouter}
-                    to={`/live/${row.id}`}
-                    sx={{
-                      color: row.live ? "green" : "success",
-                      "&:hover": {
-                        bgcolor: "#9146FF",
-                        color: "secondary.main",
-                      },
-                    }}
-                  >
-                    <LiveTv />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="editar tild" arrow>
-                  <IconButton
-                    component={LinkRouter}
-                    to={`/code/edit/${row.id}`}
-                    sx={{
-                      "&:hover": {
-                        bgcolor: "#9146FF",
-                        color: "secondary.main",
-                      },
-                    }}
-                  >
-                    <EditAttributes />
-                  </IconButton>
-                </Tooltip>
                 <Tooltip title="excluir tild" arrow>
                   <IconButton
                     component={LinkRouter}

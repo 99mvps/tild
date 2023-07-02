@@ -230,13 +230,15 @@ export function UserProfileRegistration() {
                 onChange={handleCodeOfConductAccept}
               />
             </Grid>
-            <Grid item sx={{ display: "flex", justifyContent: "flex-end" }}>
-              <Typography variant="body1" color="textSecondary">
-                Eu aceito o{" "}
-                <Link to="/code-of-conduct" style={{ color: "crimson" }}>
-                  Código de Conduta
-                </Link>
-              </Typography>
+            <Grid item>
+              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <Typography variant="body1" color="textSecondary">
+                  Eu aceito o{" "}
+                  <Link to="/code-of-conduct" style={{ color: "crimson" }}>
+                    Código de Conduta
+                  </Link>
+                </Typography>
+              </Box>
             </Grid>
           </Grid>
 

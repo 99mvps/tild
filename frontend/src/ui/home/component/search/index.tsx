@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Box, Chip, SxProps, TextField, Theme } from "@mui/material";
 
-import { CodeEditorEnabledLanguagesFind } from "ui/code-editor/code-editor.enum";
+import { findEnabledLanguages } from "ui/code-editor/code-editor.languages";
 import { IconSearchButton } from "./icon";
 import { Cancel } from "@mui/icons-material";
 
@@ -56,7 +56,7 @@ export function HomeSearch({ onSubmit }: any) {
     setIsSearchLoading(false);
 
     if (!result) {
-      result = CodeEditorEnabledLanguagesFind(handler.replace("@", ""));
+      result = findEnabledLanguages(handler.replace("@", ""));
       result = result ? "@" + result : null;
     }
 

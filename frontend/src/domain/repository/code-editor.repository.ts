@@ -12,6 +12,10 @@ export interface ICodeEditorRepository {
   getAll(queryFilter: FilterCodeEditorDTO): Promise<CodeEditorDTO[]>;
   getById(codeEditorId: string): Promise<CodeEditorDTO>;
   remove(codeEditorId: string): Promise<CodeEditorDTO>;
+  update(
+    codeEditorId: CodeEditorDTO["id"],
+    codeEditor: CodeEditorDTO
+  ): Promise<CodeEditorDTO>;
 }
 
 export class CodeEditorRepository
@@ -94,6 +98,29 @@ export class CodeEditorRepository
     const { data } = await this.responseHandler(
       response,
       "Erro ao excluir editor de código."
+    );
+
+    return data;
+  }
+
+  /**
+   * update the code editor
+   * @param codeEditorId code editor id
+   * @returns
+   */
+  async update(
+    codeEditorId: CodeEditorDTO["id"],
+    codeEditor: CodeEditorDTO
+  ): Promise<CodeEditorDTO> {
+    const response = await this.http.request({
+      method: "PATCH",
+      url: this.apiEndpoint.concat(`/${codeEditorId}`),
+      body: codeEditor,
+    });
+
+    const { data } = await this.responseHandler(
+      response,
+      "Erro ao atualizar editor de código."
     );
 
     return data;

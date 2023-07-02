@@ -1,6 +1,6 @@
 import { object, string, mixed } from "yup";
 
-import { CodeEditorEnabledLanguages } from "ui/code-editor/code-editor.enum";
+import { CodeEditorEnabledLanguages } from "ui/code-editor/code-editor.languages";
 
 const codeEditorValidation = object().shape({
   title: string().required("Título é obrigatório."),
