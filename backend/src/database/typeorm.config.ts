@@ -3,7 +3,13 @@ import { User } from "src/users/user.entity";
 import { DataSourceOptions } from "typeorm";
 import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
 
-console.log("process.env", process.env);
+import * as dotenv from "dotenv";
+
+dotenv.config({
+  path: "/etc/secrets/.env",
+});
+
+console.log("process.env", process.env, dotenv.parse("/etc/secrets/.env"));
 
 export default {
   type: process.env.DATABASE_TYPE as PostgresConnectionOptions["type"],
