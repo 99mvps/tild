@@ -3,6 +3,8 @@ WORKDIR /home/backend
 
 COPY . ./
 
+RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env cat /etc/secrets/.env
+
 RUN npm install
 RUN npm run build
 RUN npm run migration:run
