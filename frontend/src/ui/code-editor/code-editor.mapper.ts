@@ -1,5 +1,5 @@
 import { ListMapper, MUIDropDownList } from "domain/mapper";
-import { CodeEditorEnabledLanguages } from "./code-editor.enum";
+import { CodeEditorEnabledLanguages } from "./code-editor.languages";
 
 /**
  * A mapper to transform the value received from a source, into a DropDown list.

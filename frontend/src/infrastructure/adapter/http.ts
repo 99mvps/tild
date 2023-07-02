@@ -19,7 +19,7 @@ export interface IHttpRequestOption {
  */
 export interface IHttp {
   request(requestOption: IHttpRequestOption): Promise<Response>;
-  setBearerTokenHeader(token: any): any;
+  setBearerToken(token: string): void;
 }
 
 /**
@@ -30,20 +30,20 @@ export interface IHttp {
  * @implements {IHttp}
  */
 export class Http implements IHttp {
-  private bearerToken: string = "";
+  private bearerToken = "EMPTY_TOKEN";
 
-  public setBearerTokenHeader(token: any) {
+  public setBearerToken(token: string) {
     this.bearerToken = `Bearer ${token}`;
   }
 
   /**
    * Trigger the request to the server
    *
-   * @param {IHttpRequestOption} requestOption http client request options
-   * @return {*}  {Promise<any>}
+   * @param requestOption http client request options
+   * @return response
    * @memberof Http
    */
-  async request(requestOption: IHttpRequestOption): Promise<any> {
+  async request(requestOption: IHttpRequestOption) {
     let option: RequestInit = {
       method: "GET",
       headers: {
@@ -58,7 +58,7 @@ export class Http implements IHttp {
       };
     }
 
-    if (this?.bearerToken) {
+    if (this.bearerToken !== "EMPTY_TOKEN") {
       option = {
         ...option,
         headers: {
@@ -72,7 +72,7 @@ export class Http implements IHttp {
 
     if (
       requestOption?.body &&
-      !["GET", "HEAD"].includes(option.method as string)
+      !["GET", "HEAD"].includes(String(option.method))
     ) {
       option = {
         ...option,

@@ -118,6 +118,9 @@ export enum CodeEditorEnabledLanguages {
   z80 = "z80",
 }
 
+export type CodeEditorEnabledLanguagesKeys =
+  keyof typeof CodeEditorEnabledLanguages;
+
 // Existing enum values...
 
 // export const LanguageExtensions: Record<CodeEditorEnabledLanguages, string> = {
@@ -131,12 +134,12 @@ export enum CodeEditorEnabledLanguages {
 // Usage:
 // const extensions = Object.values(LanguageExtensions); // [".apl", ".asciiarmor", ".asterisk", ...]
 
-export const CodeEditorEnabledLanguagesFind = (lang: string): string | null => {
+export const findEnabledLanguages = (lang: string): string | null => {
   return (
-    Object.keys(CodeEditorEnabledLanguages).find((key) => {
-      if (lang === key) {
+    Object.keys(CodeEditorEnabledLanguages).find((allowedLang) => {
+      if (lang === allowedLang) {
         return CodeEditorEnabledLanguages[
-          key as keyof typeof CodeEditorEnabledLanguages
+          allowedLang as CodeEditorEnabledLanguagesKeys
         ];
       }
       return null;

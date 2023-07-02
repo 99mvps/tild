@@ -81,11 +81,6 @@ export class UpdateCodeEditorDTO extends PartialType(CreateCodeEditorDTO) {
 
   static fail = "CODE_EDITOR_UPDATE_FAIL";
   static failMessage = "Erro ao editar editor de código.";
-
-  @IsNotEmpty({
-    message: "Precisa informar a data de atualização.",
-  })
-  updatedAt?: Date;
 }
 
 export class DeleteCodeEditorDTO extends PartialType(CodeEditorDTO) {

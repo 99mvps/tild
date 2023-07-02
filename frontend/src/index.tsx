@@ -1,17 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-
+import { RecoilRoot } from "recoil";
 import { Root } from "ui/root";
 
 import reportWebVitals from "./reportWebVitals";
-
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-import { RecoilRoot } from "recoil";
 
 const theme = createTheme({
   palette: {
@@ -119,24 +113,13 @@ const theme = createTheme({
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <RecoilRoot key={Math.random()}>
         <Root />
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
       </RecoilRoot>
     </ThemeProvider>
   </React.StrictMode>

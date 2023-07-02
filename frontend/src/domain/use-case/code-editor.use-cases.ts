@@ -1,6 +1,7 @@
 import { ValidationError } from "yup";
 import {
   CreateCodeEditorDTO,
+  UpdateCodeEditorDTO,
   FilterCodeEditorDTO,
   CodeEditorDTO,
 } from "ui/code-editor/code-editor.interfaces";
@@ -10,17 +11,17 @@ import { BaseRepository } from "domain/repository";
 import { codeEditorValidation } from "domain/validations/code-editor.validation";
 
 type CodeEditorCaseReturn = {
-  onSuccess: (codeEditor: CodeEditorDTO) => void;
+  onSuccess?: (codeEditor: CodeEditorDTO) => void;
   onError: (errors: TErrorMessage) => void;
 };
 
 type LoadCodeEditorCaseReturn = {
-  onSuccess: (codeEditor: CodeEditorDTO) => void;
+  onSuccess?: (codeEditor: CodeEditorDTO) => void;
   onError: (errors: TErrorMessage) => void;
 };
 
 type LoadAllCodeEditorsUseCaseReturn = {
-  onSuccess: (codeEditor: CodeEditorDTO[]) => void;
+  onSuccess?: (codeEditor: CodeEditorDTO[]) => void;
   onError: (errors: TErrorMessage) => void;
 };
 
@@ -36,6 +37,11 @@ export type TCodeEditorUseCases = {
   loadAll(
     filter: FilterCodeEditorDTO,
     { onSuccess, onError }: LoadAllCodeEditorsUseCaseReturn
+  ): void;
+  update(
+    codeEditorId: CodeEditorDTO["id"],
+    codeEditor: UpdateCodeEditorDTO,
+    { onSuccess, onError }: CodeEditorCaseReturn
   ): void;
   remove(
     filter: CreateCodeEditorDTO,
@@ -55,7 +61,7 @@ export function create(
     .then(() =>
       codeEditorRepository
         .create(formInput)
-        .then((codeEditor: CodeEditorDTO) => onSuccess(codeEditor))
+        .then((codeEditor: CodeEditorDTO) => onSuccess?.(codeEditor))
         .catch((error: Error) => {
           onError({
             title: error.message,
@@ -78,9 +84,8 @@ export function load(
   const { codeEditor: codeEditorRepository } = BaseRepository();
   codeEditorRepository
     .getAll({ id: codeEditorId })
-    .then((codeEditor: CodeEditorDTO[]) => {
-      const [c] = codeEditor;
-      onSuccess(c);
+    .then(([codeEditor]: CodeEditorDTO[]) => {
+      onSuccess?.(codeEditor);
     })
     .catch((error: Error) =>
       onError({
@@ -97,7 +102,7 @@ export function loadAll(
   const { codeEditor: codeEditorRepository } = BaseRepository();
   codeEditorRepository
     .getAll(filter)
-    .then((codeEditor: CodeEditorDTO[]) => onSuccess(codeEditor))
+    .then((codeEditor: CodeEditorDTO[]) => onSuccess?.(codeEditor))
     .catch((error: Error) =>
       onError({
         title: error.message,
@@ -113,6 +118,18 @@ export function remove(
   const { codeEditor: codeEditorRepository } = BaseRepository();
   codeEditorRepository
     .remove(codeEditor.id)
-    .then(() => onSuccess(codeEditor))
+    .then(() => onSuccess?.(codeEditor))
+    .catch((errors: TErrorMessage) => onError(errors));
+}
+
+export function update(
+  codeEditorId: CodeEditorDTO["id"],
+  codeEditor: CodeEditorDTO,
+  { onSuccess, onError }: CodeEditorCaseReturn
+) {
+  const { codeEditor: codeEditorRepository } = BaseRepository();
+  codeEditorRepository
+    .update(codeEditorId, codeEditor)
+    .then(() => onSuccess?.(codeEditor))
     .catch((errors: TErrorMessage) => onError(errors));
 }

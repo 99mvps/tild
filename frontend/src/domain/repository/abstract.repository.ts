@@ -28,7 +28,7 @@ export abstract class AbstractRepository {
   constructor(basePath: string, http: IHttp, userToken: ITokenStorage) {
     this._repoUrl = new URL(basePath, serverEndpoint);
     this.http = http;
-    this.http.setBearerTokenHeader(userToken.getRawToken());
+    this.http.setBearerToken(userToken.getRawToken());
   }
 
   /**
@@ -52,7 +52,7 @@ export abstract class AbstractRepository {
   setSearchParams<T>(searchParams: T) {
     if (searchParams) {
       Object.entries(searchParams).forEach(([key, value]) => {
-        this._repoUrl.searchParams.set(key, value as string);
+        this._repoUrl.searchParams.set(key, String(value));
       });
     }
   }

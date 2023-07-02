@@ -1,9 +1,16 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Grid,  Typography } from "@mui/material";
+import {
+  Autocomplete,
+  Box,
+  Grid,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useCases } from "context/use-cases";
 import { CodeEditorDTO } from "ui/code-editor/code-editor.interfaces";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   LiveShowStateType,
   liveShowState,
@@ -11,43 +18,91 @@ import {
 import { TErrorMessage } from "ui/components/error";
 import { toast } from "react-toastify";
 import EmptyLive from "../code-editor/components/empty-list.show";
+import { CodeEditorEnabledLanguages } from "ui/code-editor/code-editor.languages";
+import { codeEditorLangsDropDownList } from "ui/code-editor/code-editor.mapper";
+import {
+  ErrorOutline,
+  Visibility,
+  SaveAs,
+  StarBorder,
+  Check,
+} from "@mui/icons-material";
+import { MUIDropDownList } from "domain/mapper";
+import { tildIdLiveSelector } from "domain/state/general-application.recoil";
 
-/**
- * The `"/path/:id"` param is a param that matches on the route and is treated as a value that needs to be fetched
- * as soons as possible
- *
- * @returns {JSX.Element} Form Element
- */
 export function LiveShow(): JSX.Element {
   const {
-    CodeEditorUseCases: { load },
+    CodeEditorUseCases: { load, update },
   } = useCases();
 
   let { id } = useParams<{ id: string }>();
 
-  const emptyCodeEditor: CodeEditorDTO = {
-    id: "",
-    title: "",
-    lang: "",
-    live: false,
-    createdAt: new Date(),
-  };
+  const codeEditorDropDownList = codeEditorLangsDropDownList(
+    Object.keys(CodeEditorEnabledLanguages)
+  );
 
-  const [codeEditor, setCodeEditor] = useState<CodeEditorDTO>(emptyCodeEditor);
-  const liveDataModel = useRecoilValue<LiveShowStateType>(liveShowState);
+  const [IconActionComponent, setIconActionComponent] =
+    useState<React.ReactNode>(<SaveAs />);
+  const [codeEditorId, setCodeEditorId] = useState<string>("");
+  const [codeEditorTitle, setCodeEditorTitle] = useState("");
+  const [codeEditorLangOpt, setCodeEditorLangOpt] =
+    useState<MUIDropDownList | null>(null);
+
+  const tildLive = useRecoilValue<LiveShowStateType>(liveShowState);
+  const [, setAppTildId] = useRecoilState(tildIdLiveSelector);
+
+  const updateCodeEditor = useCallback(
+    (
+      codeEditorId: string,
+      { title, lang }: { title?: string; lang?: string }
+    ) =>
+      update(
+        codeEditorId,
+        {
+          title,
+          lang,
+        },
+        {
+          onSuccess: (codeEditor) => {
+            setCodeEditorId(codeEditor.id);
+            setIconActionComponent(<Check color="success" />);
+            setTimeout(() => {
+              setIconActionComponent(<SaveAs />);
+            }, 1000);
+          },
+          onError: ({ title, errors }: TErrorMessage) => {
+            setIconActionComponent(<ErrorOutline color="error" />);
+            setTimeout(() => {
+              setIconActionComponent(<SaveAs />);
+            }, 1000);
+            toast.error(`${title}: ${errors}`);
+          },
+        }
+      ),
+    [update]
+  );
 
   const loadCodeEditor = useCallback(
     (id: CodeEditorDTO["id"]) =>
       load(id, {
-        onSuccess: (codeEditor: CodeEditorDTO) => setCodeEditor(codeEditor),
+        onSuccess: (codeEditor: CodeEditorDTO) => {
+          setAppTildId(codeEditor.id);
+          setCodeEditorId(codeEditor.id);
+          setCodeEditorTitle(codeEditor.title);
+          setCodeEditorLangOpt({
+            id: codeEditor.lang,
+            label: codeEditor.lang,
+            firstLetter: codeEditor.lang.charAt(0),
+          });
+        },
         onError: ({ title, errors }: TErrorMessage) =>
           toast.error(`${title}: ${errors}`),
       }),
-    [load]
+    [load, setAppTildId]
   );
 
   useEffect(() => {
-    id && loadCodeEditor(id);
+    loadCodeEditor(id);
   }, [id, loadCodeEditor]);
 
   if (!id) {
@@ -59,27 +114,81 @@ export function LiveShow(): JSX.Element {
       container
       sx={{
         display: "flex",
+        padding: 2,
         backgroundColor: "white",
       }}
     >
-      <Grid item xs={12}>
-        <Typography variant="h3">Live</Typography>
+      <Grid item xs={5}>
+        <TextField
+          label="title"
+          name="title"
+          value={codeEditorTitle}
+          sx={{ width: "100%", paddingRight: 2 }}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setCodeEditorTitle(e.target.value)
+          }
+        />
+      </Grid>
+      <Grid item xs={5}>
+        <Autocomplete
+          disablePortal
+          options={codeEditorDropDownList}
+          groupBy={(option) => option.label.charAt(0)}
+          sx={{ marginBottom: 2 }}
+          value={codeEditorLangOpt}
+          onChange={(_, selOpt) => setCodeEditorLangOpt(selOpt)}
+          isOptionEqualToValue={(option, value) => option.id === value?.id}
+          renderInput={(params) => (
+            <TextField {...params} label="lang" name="lang" />
+          )}
+        />
+      </Grid>
+      <Grid item xs={2}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <IconButton
+            color="primary"
+            onClick={() =>
+              updateCodeEditor(codeEditorId, {
+                title: codeEditorTitle,
+                lang: codeEditorLangOpt?.label,
+              })
+            }
+            sx={{
+              marginTop: 1,
+              bgcolor: "secondary.main",
+              color: "crimson",
+              "&:hover": {
+                bgcolor: "#9146FF",
+                color: "secondary.main",
+              },
+              transition: "background-color 0.3s, color 0.3s",
+            }}
+          >
+            {IconActionComponent}
+          </IconButton>
+        </Box>
       </Grid>
       <Grid item xs={12}>
-        <Typography variant="h5">{codeEditor.title}</Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Typography variant="h5">{codeEditor.lang}</Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Typography variant="h5">
-          {JSON.stringify(codeEditor.createdAt)}
-        </Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Typography variant="h5">
-          Participants: {liveDataModel.participants.count}
-        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            "& > *": {
+              marginRight: 1,
+            },
+          }}
+        >
+          <Typography variant="body2">{tildLive.participants.count}</Typography>
+          <Visibility fontSize="small" />
+          <Typography variant="body2">0</Typography>
+          <StarBorder fontSize="small" />
+        </Box>
       </Grid>
     </Grid>
   );
