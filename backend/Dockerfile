@@ -13,4 +13,4 @@ WORKDIR /home/backend
 COPY --from=builder /home/backend ./
 EXPOSE 3001
 
-ENTRYPOINT [".bin/docker-entrypoint.sh"]
+ENTRYPOINT ["docker-entrypoint.sh"]
