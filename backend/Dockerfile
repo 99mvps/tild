@@ -3,8 +3,6 @@ WORKDIR /home/backend
 
 COPY . ./
 
-COPY .env .env
-
 RUN npm install
 RUN npm run build
 RUN npm run migration:run
