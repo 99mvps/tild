@@ -1,7 +1,7 @@
 import { Module, Scope } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule } from "@nestjs/config";
-// import { setEnvironment } from "./env";
+import { setEnvironment } from "./env";
 import { AuthModule } from "./auth/auth.module";
 import { UserModule } from "./users/user.module";
 import typeormConfig from "./database/typeorm.config";
@@ -15,7 +15,7 @@ import { CodeEditorModule } from "./code-editor/code-editor.module";
     ConfigModule.forRoot({
       isGlobal: true,
       expandVariables: true,
-      envFilePath: "/etc/secrets/.env", // setEnvironment(),
+      envFilePath: setEnvironment(),
     }),
     TypeOrmModule.forRoot(typeormConfig),
     AuthModule,
