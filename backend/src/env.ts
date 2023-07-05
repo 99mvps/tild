@@ -1,13 +1,13 @@
 export function setEnvironment() {
   switch (process.env.NODE_ENV) {
     case "test":
-      return [".env.test", "/etc/secrets/.env"];
+      return [".env.test", "envfile"];
     case "stage":
-      return [".env.stage", "/etc/secrets/.env"];
+      return [".env.stage", "envfile"];
     case "development":
-      return [".env.development", "/etc/secrets/.env"];
+      return [".env.development", "envfile"];
     case "production":
     default:
-      return "/etc/secrets/.env";
+      return "envfile";
   }
 }
