@@ -3,10 +3,8 @@ FROM node:18
 WORKDIR /home/backend
 
 COPY . ./
-
 RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env cat /etc/secrets/.env
-RUN --mount=type=secret,id=_env,dst=/etc/secrets/peroba cat /etc/secrets/peroba
-RUN --mount=type=secret,id=_env,dst=/etc/secrets/peroba cat /etc/secrets/peroba >> diamba
+RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env cat /etc/secrets/.env >> .env
 RUN ls 
 
 #COPY /etc/secrets/.env .env
